@@ -358,6 +358,20 @@
       gap: 10px;
     }
 
+    .tts-style-group {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 0 12px;
+    }
+
+    .tts-tip {
+      margin: 10px 0 0;
+      color: #6f7b8f;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
     .control-btn,
     .favorite-btn {
       padding: 12px 16px;
@@ -595,6 +609,7 @@
 
         <div>
           <h3>朗读</h3>
+          <div class="tts-style-group" id="voiceStyleGroup"></div>
           <div class="tts-controls">
             <button class="control-btn" id="playBtn">播放</button>
             <button class="control-btn" id="pauseBtn">暂停</button>
@@ -602,6 +617,7 @@
             <button class="favorite-btn" id="favoriteBtn">收藏这篇</button>
           </div>
           <p class="status" id="ttsStatus">如果浏览器支持语音朗读，就可以轻轻读出来。</p>
+          <p class="tts-tip">小提示：声音好不好听，还是会受手机、电脑和浏览器自带语音引擎影响。</p>
         </div>
       </div>
     </section>
@@ -629,6 +645,12 @@
       { id: "short", label: "1 分钟", detail: "6 句左右，适合快快入睡", sentenceCount: 6 },
       { id: "medium", label: "3 分钟", detail: "10 句左右，安静抱抱时听", sentenceCount: 10 },
       { id: "long", label: "5 分钟", detail: "14 句左右，慢慢听到睡着", sentenceCount: 14 }
+    ];
+
+    const voiceStyles = [
+      { id: "extra-gentle", label: "更轻柔", detail: "最慢最软", rate: 0.72, pitch: 0.92, volume: 0.82 },
+      { id: "standard", label: "刚刚好", detail: "自然晚安", rate: 0.82, pitch: 0.98, volume: 0.9 },
+      { id: "slower", label: "更慢一点", detail: "一句一句听", rate: 0.76, pitch: 0.95, volume: 0.86 }
     ];
 
     const storyTemplates = [
@@ -687,6 +709,33 @@
         ]
       },
       {
+        id: "excavator-garage",
+        vehicle: "excavator",
+        title: "小挖掘机回到暖暖小车库",
+        opening: [
+          "夜空蓝蓝的。",
+          "小挖掘机慢慢回家。",
+          "小车库的小灯，已经亮起来了。",
+          "门口还有一颗一闪一闪的小星星。 "
+        ],
+        middle: [
+          "小挖掘机轻轻开进去。",
+          "小轮子停好啦。",
+          "小铲斗收好啦。",
+          "暖暖的灯光照着它。",
+          "像一只软软的小手。",
+          "小工具们也在旁边打哈欠。",
+          "小刷子要睡了。",
+          "小扳手也要睡了。 "
+        ],
+        closing: [
+          "小车库安安静静。",
+          "月亮在窗边看一看。",
+          "小挖掘机做了一个甜甜的梦。",
+          "梦里有软软的云和亮亮的星。"
+        ]
+      },
+      {
         id: "crane-moon",
         vehicle: "crane",
         title: "小吊车把月亮轻轻放好",
@@ -711,6 +760,33 @@
           "长手臂安静躺下。",
           "晚风吹过来。",
           "它睡得甜甜的。"
+        ]
+      },
+      {
+        id: "crane-stars",
+        vehicle: "crane",
+        title: "小吊车帮星星找好位置",
+        opening: [
+          "小吊车抬头看看天。",
+          "今夜的星星好多呀。",
+          "一颗在左边。",
+          "一颗在右边。 "
+        ],
+        middle: [
+          "小吊车笑一笑。",
+          "它说，大家都排好队啦。",
+          "长长手臂慢慢放下来。",
+          "不高高举着了。",
+          "小灯灯也轻轻暗下来。",
+          "像在说，快睡吧。",
+          "小星星一闪一闪。",
+          "像给它盖上小被子。 "
+        ],
+        closing: [
+          "小吊车靠着小车库。",
+          "晚风轻轻绕过去。",
+          "它听着星星眨眼睛。",
+          "慢慢就睡着啦。"
         ]
       },
       {
@@ -741,6 +817,33 @@
         ]
       },
       {
+        id: "dump-garage",
+        vehicle: "dump",
+        title: "小翻斗车的星星停车位",
+        opening: [
+          "小翻斗车回到停车的小院子。",
+          "院子里有暖暖的小灯。",
+          "地上画着一颗星星。",
+          "那是它的晚安停车位。 "
+        ],
+        middle: [
+          "小翻斗车慢慢倒车。",
+          "轻轻停好。",
+          "不碰到这里。",
+          "也不碰到那里。",
+          "车斗空空的，很轻很轻。",
+          "小路软软的，很安静很安静。",
+          "小院子的工具箱合上了。",
+          "小扫把也靠着墙休息。 "
+        ],
+        closing: [
+          "一盏灯亮着小小的光。",
+          "月亮照着星星停车位。",
+          "小翻斗车打了一个小哈欠。",
+          "安安稳稳睡着啦。"
+        ]
+      },
+      {
         id: "mixer-lullaby",
         vehicle: "mixer",
         title: "小搅拌车的圆圆摇篮曲",
@@ -765,6 +868,33 @@
           "小车身暖暖的。",
           "月亮说，乖孩子。",
           "小搅拌车睡着啦。"
+        ]
+      },
+      {
+        id: "mixer-lights",
+        vehicle: "mixer",
+        title: "小搅拌车和门口的小黄灯",
+        opening: [
+          "小搅拌车回家啦。",
+          "门口有一盏小黄灯。",
+          "灯光软软的。",
+          "像一团暖暖的小棉花。 "
+        ],
+        middle: [
+          "圆圆桶今天不转了。",
+          "它想安静一会儿。",
+          "小黄灯照着车轮。",
+          "也照着小小的影子。",
+          "小影子靠在地上。",
+          "像在陪它一起睡。",
+          "天上的月亮弯弯的。",
+          "像在轻轻笑。 "
+        ],
+        closing: [
+          "小搅拌车慢慢合上眼睛。",
+          "小黄灯陪着它。",
+          "屋外有星星，屋里有暖光。",
+          "这一夜睡得香香的。"
         ]
       },
       {
@@ -795,6 +925,33 @@
         ]
       },
       {
+        id: "roller-garden",
+        vehicle: "roller",
+        title: "小压路机走过月光小路",
+        opening: [
+          "月亮把小路照得亮亮的。",
+          "小压路机慢慢走过去。",
+          "它今天只做一件事。",
+          "就是走一条晚安小路。 "
+        ],
+        middle: [
+          "小路一点也不急。",
+          "小路软软的。",
+          "小路边有睡着的小花。",
+          "还有闭着眼睛的小草。",
+          "小压路机滚一滚。",
+          "再停一停。",
+          "像在给小路拍拍背。",
+          "说，睡吧，睡吧。 "
+        ],
+        closing: [
+          "月光落在圆圆轮子上。",
+          "小压路机也安静下来。",
+          "它靠着小树影。",
+          "甜甜地睡着啦。"
+        ]
+      },
+      {
         id: "little-truck-milk",
         vehicle: "little-truck",
         title: "小卡车送来一车晚安",
@@ -819,6 +976,33 @@
           "它说，今天送完啦。",
           "谢谢你，晚安呀。",
           "小卡车睡着啦。"
+        ]
+      },
+      {
+        id: "little-truck-lantern",
+        vehicle: "little-truck",
+        title: "小卡车带着小灯回家",
+        opening: [
+          "小卡车的车顶上，有一盏小小灯。",
+          "不是大大的灯。",
+          "是睡前的小灯。",
+          "暖暖的，黄黄的。 "
+        ],
+        middle: [
+          "小卡车开过软软的路。",
+          "路边的树影摇一摇。",
+          "像在挥手说晚安。",
+          "小卡车轻轻答应。",
+          "它把小灯带回小车库。",
+          "把安静也一起带回去。",
+          "门口的小凳子睡了。",
+          "小工具箱也睡了。 "
+        ],
+        closing: [
+          "小卡车停在暖光里。",
+          "小灯慢慢暗下来。",
+          "窗外有月亮，窗里有安稳。",
+          "小卡车呼呼睡着啦。"
         ]
       },
       {
@@ -847,6 +1031,33 @@
           "小车车们都不动了。",
           "它们一起睡着啦。"
         ]
+      },
+      {
+        id: "friends-garage",
+        vehicle: "all",
+        title: "小车库里的暖暖晚安灯",
+        opening: [
+          "小车车们一辆一辆回家。",
+          "小车库亮起暖暖的灯。",
+          "门口的小牌子写着。",
+          "欢迎回家，小宝贝们。 "
+        ],
+        middle: [
+          "小挖掘机停左边。",
+          "小吊车停右边。",
+          "小翻斗车和小卡车排成一排。",
+          "小搅拌车安静极了。",
+          "小压路机也不滚了。",
+          "小工具们在角落里打哈欠。",
+          "小刷子睡了。",
+          "小扳手也睡了。 "
+        ],
+        closing: [
+          "月亮在窗上挂了一会儿。",
+          "星星在屋顶眨了眨眼。",
+          "小车库暖暖的，静静的。",
+          "大家一起睡进甜甜梦里。"
+        ]
       }
     ];
 
@@ -860,15 +1071,22 @@
     const favoritesKey = "bedtime-trucks-favorites";
     const ambientKey = "bedtime-trucks-ambient";
     const noiseKey = "bedtime-trucks-noise";
+    const voiceStyleKey = "bedtime-trucks-voice-style";
 
     let selectedVehicle = vehicles[0].id;
     let selectedLength = lengthOptions[1].id;
+    let selectedVoiceStyle = voiceStyles[1].id;
     let currentStory = null;
     let favorites = [];
     let utterance = null;
+    let availableVoices = [];
+    let speechState = "idle";
+    let speechToken = 0;
+    let isStoppingSpeech = false;
 
     const vehicleGrid = document.getElementById("vehicleGrid");
     const lengthGroup = document.getElementById("lengthGroup");
+    const voiceStyleGroup = document.getElementById("voiceStyleGroup");
     const storyTitle = document.getElementById("storyTitle");
     const storyText = document.getElementById("storyText");
     const storyVehicleTag = document.getElementById("storyVehicleTag");
@@ -897,6 +1115,46 @@
       `).join("");
     }
 
+    function renderVoiceStyles() {
+      voiceStyleGroup.innerHTML = voiceStyles.map((style) => `
+        <button class="pill-btn ${style.id === selectedVoiceStyle ? "active" : ""}" data-voice-style="${style.id}">
+          <strong>${style.label}</strong>
+          <span>${style.detail}</span>
+        </button>
+      `).join("");
+    }
+
+    function pickSleepyTitle(template, vehicle, lengthOption) {
+      const suffixMap = {
+        short: "轻轻篇",
+        medium: "晚安篇",
+        long: "甜梦长长篇"
+      };
+      const suffix = suffixMap[lengthOption.id];
+      if (template.vehicle === "all") {
+        return `${template.title} · ${suffix}`;
+      }
+      const options = [
+        template.title,
+        `${vehicle.name}的${suffix}`,
+        `${vehicle.name}今夜的小梦`,
+        `${template.title} · ${suffix}`
+      ];
+      return options[(template.title.length + lengthOption.sentenceCount) % options.length];
+    }
+
+    function buildExtraSleepyLines(vehicle) {
+      return [
+        `${vehicle.name}听见小星星轻轻说，晚安呀。`,
+        `小车库里的暖黄灯，也在轻轻陪着${vehicle.name}。`,
+        "软软的夜路不说话，只安静地发着小小的光。",
+        "旁边的小刷子睡了，小扳手也睡了。",
+        "月亮把一小片银光，放在它的车顶上。",
+        "风很轻，灯很暖，夜晚像一条软软的小被子。",
+        `${vehicle.name}不着急，只想慢慢停好，慢慢做梦。`
+      ];
+    }
+
     function buildStory(template, lengthId, vehicleId) {
       const lengthOption = lengthOptions.find((item) => item.id === lengthId);
       const vehicle = vehicles.find((item) => item.id === vehicleId);
@@ -905,6 +1163,8 @@
       const ending = [...template.closing];
       const desired = lengthOption.sentenceCount;
       const lines = [];
+      const extraLines = buildExtraSleepyLines(vehicle);
+      let extraIndex = 0;
 
       while (lines.length < desired) {
         const sequence = [...baseLines, ...combinedMiddle, ...ending];
@@ -917,14 +1177,13 @@
         if (desired <= sequence.length) {
           break;
         }
-        combinedMiddle.push("小月亮还在陪着它。");
+        combinedMiddle.push(extraLines[extraIndex % extraLines.length]);
         combinedMiddle.push("安安静静，甜甜睡。");
+        extraIndex += 1;
       }
 
       const lengthLabel = lengthOption.label;
-      const title = template.vehicle === "all"
-        ? `${template.title}`
-        : `${vehicle.name}的晚安故事`;
+      const title = pickSleepyTitle(template, vehicle, lengthOption);
 
       return {
         id: `${template.id}-${lengthId}-${Date.now()}`,
@@ -1043,36 +1302,147 @@
       return "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
     }
 
+    function getVoiceStyle() {
+      return voiceStyles.find((item) => item.id === selectedVoiceStyle) || voiceStyles[1];
+    }
+
+    function scoreChineseVoice(voice) {
+      const name = voice.name.toLowerCase();
+      const lang = (voice.lang || "").toLowerCase();
+      let score = 0;
+
+      if (lang.startsWith("zh-cn") || lang.startsWith("cmn-hans")) score += 90;
+      else if (lang.startsWith("zh")) score += 72;
+
+      if (voice.localService) score += 10;
+
+      [
+        "ting-ting", "tingting", "mei-jia", "meijia", "sin-ji", "sinji",
+        "xiaoxiao", "yunxi", "huihui", "yaoyao", "kangkang",
+        "natural", "neural", "premium", "enhanced", "siri"
+      ].forEach((keyword) => {
+        if (name.includes(keyword)) score += 16;
+      });
+
+      [
+        "compact", "desktop", "google"
+      ].forEach((keyword) => {
+        if (name.includes(keyword)) score -= 4;
+      });
+
+      return score;
+    }
+
+    function refreshVoices() {
+      if (!supportsSpeech()) {
+        availableVoices = [];
+        return;
+      }
+      availableVoices = window.speechSynthesis.getVoices().slice();
+      updateTtsStatus();
+    }
+
+    function getBestChineseVoice() {
+      const chineseVoices = availableVoices.filter((voice) => /^zh|^cmn/i.test(voice.lang || ""));
+      if (!chineseVoices.length) {
+        return null;
+      }
+      return chineseVoices.sort((a, b) => scoreChineseVoice(b) - scoreChineseVoice(a))[0];
+    }
+
+    function updateTtsStatus(message) {
+      if (message) {
+        ttsStatus.textContent = message;
+        return;
+      }
+
+      if (!supportsSpeech()) {
+        ttsStatus.textContent = "当前浏览器不支持语音朗读，故事仍然可以正常使用。";
+        return;
+      }
+
+      if (!availableVoices.length) {
+        ttsStatus.textContent = "正在等浏览器准备朗读声音，请稍等一下再点播放。";
+        return;
+      }
+
+      const chineseVoice = getBestChineseVoice();
+      if (!chineseVoice) {
+        ttsStatus.textContent = "这个设备暂时没有可用的中文声音，仍可阅读故事文字。";
+        return;
+      }
+
+      const style = getVoiceStyle();
+      const modeLabelMap = {
+        idle: `已准备好中文朗读：${chineseVoice.name}，当前是“${style.label}”。`,
+        playing: `正在用“${style.label}”轻轻朗读。`,
+        paused: "朗读暂停了，再点播放会继续。",
+        error: "这次朗读没有成功，可以再点一次播放。"
+      };
+
+      ttsStatus.textContent = modeLabelMap[speechState] || modeLabelMap.idle;
+    }
+
     function createUtterance() {
       if (!currentStory || !supportsSpeech()) {
         return null;
       }
       const nextUtterance = new SpeechSynthesisUtterance(currentStory.text);
       nextUtterance.lang = "zh-CN";
-      nextUtterance.rate = 0.82;
-      nextUtterance.pitch = 1.0;
-      nextUtterance.volume = 1;
+      const style = getVoiceStyle();
+      nextUtterance.rate = style.rate;
+      nextUtterance.pitch = style.pitch;
+      nextUtterance.volume = style.volume;
 
-      const voices = window.speechSynthesis.getVoices();
-      const chineseVoice = voices.find((voice) => /^zh/i.test(voice.lang)) || voices[0];
+      const chineseVoice = getBestChineseVoice();
       if (chineseVoice) {
         nextUtterance.voice = chineseVoice;
       }
 
+      const token = ++speechToken;
+
       nextUtterance.onstart = () => {
-        ttsStatus.textContent = "正在轻轻朗读。";
+        if (token !== speechToken) {
+          return;
+        }
+        speechState = "playing";
+        updateTtsStatus();
       };
       nextUtterance.onpause = () => {
-        ttsStatus.textContent = "朗读已暂停。";
+        if (token !== speechToken || isStoppingSpeech) {
+          return;
+        }
+        speechState = "paused";
+        updateTtsStatus();
       };
       nextUtterance.onresume = () => {
-        ttsStatus.textContent = "继续轻轻朗读。";
+        if (token !== speechToken || isStoppingSpeech) {
+          return;
+        }
+        speechState = "playing";
+        updateTtsStatus();
       };
       nextUtterance.onend = () => {
-        ttsStatus.textContent = "朗读结束，晚安。";
+        if (token !== speechToken) {
+          return;
+        }
+        utterance = null;
+        speechState = "idle";
+        if (isStoppingSpeech) {
+          isStoppingSpeech = false;
+          updateTtsStatus("朗读已经停下来了。");
+          return;
+        }
+        updateTtsStatus("朗读结束啦，晚安。");
       };
       nextUtterance.onerror = () => {
-        ttsStatus.textContent = "这次没有成功朗读，可以再试一次。";
+        if (token !== speechToken) {
+          return;
+        }
+        utterance = null;
+        speechState = "error";
+        isStoppingSpeech = false;
+        updateTtsStatus();
       };
 
       return nextUtterance;
@@ -1084,16 +1454,30 @@
         return;
       }
       if (!supportsSpeech()) {
-        ttsStatus.textContent = "当前浏览器不支持语音朗读。";
+        updateTtsStatus();
+        return;
+      }
+
+      refreshVoices();
+
+      if (!getBestChineseVoice()) {
+        updateTtsStatus();
         return;
       }
 
       if (window.speechSynthesis.paused) {
+        speechState = "playing";
         window.speechSynthesis.resume();
         return;
       }
 
+      if (window.speechSynthesis.speaking) {
+        updateTtsStatus("已经在朗读了。");
+        return;
+      }
+
       stopSpeech(false);
+      isStoppingSpeech = false;
       utterance = createUtterance();
       if (utterance) {
         window.speechSynthesis.speak(utterance);
@@ -1102,21 +1486,29 @@
 
     function pauseSpeech() {
       if (!supportsSpeech()) {
-        ttsStatus.textContent = "当前浏览器不支持语音朗读。";
+        updateTtsStatus();
         return;
       }
-      if (window.speechSynthesis.speaking) {
+      if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
         window.speechSynthesis.pause();
+      } else if (window.speechSynthesis.paused) {
+        updateTtsStatus("现在已经是暂停状态了。");
+      } else {
+        updateTtsStatus("现在还没有开始朗读。");
       }
     }
 
     function stopSpeech(resetStatus = true) {
       if (supportsSpeech()) {
+        speechToken += 1;
+        isStoppingSpeech = window.speechSynthesis.speaking || window.speechSynthesis.paused;
         window.speechSynthesis.cancel();
       }
       utterance = null;
+      speechState = "idle";
+      isStoppingSpeech = false;
       if (resetStatus) {
-        ttsStatus.textContent = "如果浏览器支持语音朗读，就可以轻轻读出来。";
+        updateTtsStatus();
       }
     }
 
@@ -1164,6 +1556,19 @@
         renderLengths();
       });
 
+      voiceStyleGroup.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-voice-style]");
+        if (!button) {
+          return;
+        }
+        selectedVoiceStyle = button.dataset.voiceStyle;
+        localStorage.setItem(voiceStyleKey, selectedVoiceStyle);
+        renderVoiceStyles();
+        stopSpeech(false);
+        speechState = "idle";
+        updateTtsStatus();
+      });
+
       document.getElementById("generateBtn").addEventListener("click", () => generateStory());
       document.getElementById("surpriseBtn").addEventListener("click", pickRandomSetup);
       document.getElementById("playBtn").addEventListener("click", playSpeech);
@@ -1199,17 +1604,18 @@
       });
 
       if (supportsSpeech()) {
-        window.speechSynthesis.onvoiceschanged = () => {
-          ttsStatus.textContent = "浏览器朗读已准备好。";
-        };
+        refreshVoices();
+        window.speechSynthesis.onvoiceschanged = refreshVoices;
       } else {
-        ttsStatus.textContent = "当前浏览器不支持语音朗读，故事仍然可以正常使用。";
+        updateTtsStatus();
       }
     }
 
     function init() {
       renderVehicles();
       renderLengths();
+      selectedVoiceStyle = localStorage.getItem(voiceStyleKey) || selectedVoiceStyle;
+      renderVoiceStyles();
       loadFavorites();
       renderFavorites();
       bindEvents();
@@ -1217,6 +1623,7 @@
       applyAmbient(localStorage.getItem(ambientKey) || "medium");
       applyNoise(localStorage.getItem(noiseKey) || "none");
       generateStory();
+      updateTtsStatus();
     }
 
     init();
