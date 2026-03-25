@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>晚安小工程车</title>
-  <meta name="description" content="一个适合 2 岁宝宝的晚安工程车故事演示，支持角色选择、故事长度、朗读、收藏和夜晚氛围模式。">
+  <title>晚安小工程车 · Xiaoxiao 晚安声音 Demo</title>
+  <meta name="description" content="一个适合 2 岁宝宝的静态睡前故事音频 Demo，主体验使用 edge-tts 的 Xiaoxiao 预生成音频样本。">
   <style>
     :root {
       --bg-top: #18324a;
       --bg-bottom: #0e1f32;
       --panel: rgba(255, 248, 239, 0.92);
       --panel-strong: #fff7ed;
-      --panel-soft: rgba(255, 255, 255, 0.16);
+      --panel-soft: rgba(255, 255, 255, 0.1);
       --line: rgba(255, 255, 255, 0.18);
       --text: #2d3546;
       --muted: #687388;
@@ -122,7 +122,7 @@
     .wrap {
       position: relative;
       z-index: 1;
-      width: min(1100px, calc(100% - 28px));
+      width: min(1120px, calc(100% - 28px));
       margin: 0 auto;
       padding: 24px 0 40px;
     }
@@ -156,234 +156,27 @@
       letter-spacing: -0.03em;
     }
 
-    .hero p {
-      max-width: 640px;
+    .hero-copy {
+      max-width: 700px;
       margin: 0;
       color: rgba(255, 247, 238, 0.88);
       font-size: 1.04rem;
       line-height: 1.7;
     }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .card {
-      background: var(--panel);
-      color: var(--text);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-      padding: 22px;
-    }
-
-    .card h2,
-    .card h3 {
-      margin: 0 0 12px;
-      font-family: var(--font-display);
-      color: #263044;
-    }
-
-    .subtle {
-      color: var(--muted);
-      font-size: 0.96rem;
-      line-height: 1.6;
-    }
-
-    .vehicle-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .choice-btn,
-    .pill-btn,
-    .control-btn,
-    .favorite-btn {
-      border: 0;
-      cursor: pointer;
-      font: inherit;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
-    }
-
-    .choice-btn {
-      min-height: 110px;
-      padding: 14px 12px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, #fffdf8, #fff0df);
-      color: #394158;
-      text-align: left;
-      box-shadow: inset 0 0 0 1px rgba(225, 194, 149, 0.4);
-    }
-
-    .choice-btn strong,
-    .pill-btn strong {
-      display: block;
-      font-size: 1.05rem;
-    }
-
-    .choice-btn span {
-      display: block;
-      margin-top: 6px;
-      color: #6d7688;
-      font-size: 0.9rem;
-      line-height: 1.35;
-    }
-
-    .choice-btn .emoji {
-      font-size: 1.8rem;
-      margin-bottom: 10px;
-    }
-
-    .choice-btn:hover,
-    .pill-btn:hover,
-    .control-btn:hover,
-    .favorite-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .choice-btn.active,
-    .pill-btn.active {
-      background: linear-gradient(180deg, #ffe8c7, #f8cf99);
-      box-shadow: inset 0 0 0 2px rgba(216, 137, 93, 0.3), 0 14px 26px rgba(220, 167, 115, 0.24);
-      color: #57361d;
-    }
-
-    .pill-group {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin: 14px 0 18px;
-    }
-
-    .pill-btn {
-      padding: 14px 12px;
-      border-radius: 20px;
-      background: #fff6ea;
-      color: #4a5264;
-      box-shadow: inset 0 0 0 1px rgba(226, 196, 161, 0.55);
-      text-align: left;
-    }
-
-    .pill-btn span {
-      display: block;
-      margin-top: 6px;
-      font-size: 0.88rem;
-      color: #71798b;
-    }
-
-    .actions {
+    .hero-notes {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 10px;
+      gap: 10px;
+      margin-top: 16px;
     }
 
-    .primary-btn,
-    .secondary-btn {
-      border: 0;
+    .hero-note {
+      padding: 10px 14px;
       border-radius: 999px;
-      padding: 15px 22px;
-      font: inherit;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    }
-
-    .primary-btn {
-      background: linear-gradient(180deg, var(--accent), var(--accent-strong));
-      color: #543721;
-      box-shadow: 0 14px 26px rgba(228, 177, 112, 0.34);
-      font-weight: 700;
-    }
-
-    .secondary-btn {
-      background: #eff4f2;
-      color: #39565a;
-      font-weight: 700;
-    }
-
-    .primary-btn:hover,
-    .secondary-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .story-card {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      min-height: 100%;
-    }
-
-    .story-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .story-tag {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #fff0da;
-      color: #7a5437;
-      font-size: 0.9rem;
-    }
-
-    .story-box {
-      padding: 18px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, #fffdf8, #fff6eb);
-      box-shadow: inset 0 0 0 1px rgba(228, 206, 179, 0.48);
-    }
-
-    .story-title {
-      margin: 0 0 10px;
-      font-size: 1.36rem;
-      color: #2b3242;
-    }
-
-    .story-text {
-      margin: 0;
-      color: #4d5567;
-      line-height: 2;
-      font-size: 1.05rem;
-      white-space: pre-line;
-    }
-
-    .tts-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .tts-style-group {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin: 0 0 12px;
-    }
-
-    .tts-tip {
-      margin: 10px 0 0;
-      color: #6f7b8f;
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-
-    .control-btn,
-    .favorite-btn {
-      padding: 12px 16px;
-      border-radius: 18px;
-      background: #eef4f4;
-      color: #385258;
-      font-weight: 700;
-    }
-
-    .favorite-btn.active {
-      background: #ffe7c4;
-      color: #744a2e;
+      background: rgba(255, 248, 239, 0.12);
+      color: #fff5df;
+      font-size: 0.92rem;
     }
 
     .ambient-panel {
@@ -411,6 +204,11 @@
       color: #fff3df;
       cursor: pointer;
       transition: background 0.2s ease, transform 0.2s ease;
+      font: inherit;
+    }
+
+    .ambient-chip:hover {
+      transform: translateY(-2px);
     }
 
     .ambient-chip.active {
@@ -426,67 +224,207 @@
       min-height: 52px;
     }
 
-    .favorites-list {
+    .layout {
       display: grid;
-      gap: 12px;
-      margin-top: 14px;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      margin-top: 18px;
     }
 
-    .favorite-item {
+    .stack {
       display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      color: var(--text);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .card h2,
+    .card h3 {
+      margin: 0 0 12px;
+      font-family: var(--font-display);
+      color: #263044;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .demo-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .demo-card {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fffdf8, #fff4e8);
+      box-shadow: inset 0 0 0 1px rgba(225, 194, 149, 0.38);
+    }
+
+    .demo-card.active {
+      box-shadow: inset 0 0 0 2px rgba(216, 137, 93, 0.38), 0 18px 30px rgba(220, 167, 115, 0.16);
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
       gap: 8px;
-      padding: 16px;
-      border-radius: 20px;
-      background: #fff9f0;
-      box-shadow: inset 0 0 0 1px rgba(229, 207, 180, 0.5);
     }
 
-    .favorite-item h4 {
-      margin: 0;
-      color: #2f384b;
-      font-size: 1rem;
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #fff0da;
+      color: #7a5437;
+      font-size: 0.88rem;
     }
 
-    .favorite-item p {
+    .demo-card p {
       margin: 0;
-      color: #697386;
+      color: #586174;
       line-height: 1.7;
-      font-size: 0.95rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
 
-    .favorite-item .row {
+    .demo-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
     }
 
-    .tiny-btn {
+    .primary-btn,
+    .secondary-btn,
+    .ghost-btn {
       border: 0;
-      background: #edf4ef;
-      color: #36574f;
       border-radius: 999px;
-      padding: 9px 12px;
-      cursor: pointer;
+      padding: 13px 18px;
       font: inherit;
-      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .empty-state {
+    .primary-btn:hover,
+    .secondary-btn:hover,
+    .ghost-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .primary-btn {
+      background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+      color: #543721;
+      box-shadow: 0 14px 26px rgba(228, 177, 112, 0.3);
+      font-weight: 700;
+    }
+
+    .secondary-btn {
+      background: #eff4f2;
+      color: #39565a;
+      font-weight: 700;
+    }
+
+    .ghost-btn {
+      background: rgba(255, 248, 239, 0.9);
+      color: #6d4f39;
+      box-shadow: inset 0 0 0 1px rgba(225, 194, 149, 0.35);
+      font-weight: 700;
+    }
+
+    .now-playing {
+      display: grid;
+      gap: 16px;
+      min-height: 100%;
+    }
+
+    .player-shell {
       padding: 18px;
-      border-radius: 20px;
-      background: #fff9f1;
-      color: #737d90;
-      line-height: 1.7;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fffdf8, #fff6eb);
+      box-shadow: inset 0 0 0 1px rgba(228, 206, 179, 0.48);
+    }
+
+    .player-shell audio {
+      width: 100%;
+      margin-top: 14px;
+    }
+
+    .story-title {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #2b3242;
+    }
+
+    .story-text {
+      margin: 0;
+      color: #4d5567;
+      line-height: 1.95;
+      font-size: 1.02rem;
+      white-space: pre-line;
     }
 
     .status {
       min-height: 24px;
+      margin: 0;
       color: #4c6172;
       font-size: 0.95rem;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .feature-item {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: #fff8ef;
+      box-shadow: inset 0 0 0 1px rgba(228, 206, 179, 0.42);
+      color: #596376;
+      line-height: 1.65;
+    }
+
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .collection-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fffdf9, #fff3e6);
+      box-shadow: inset 0 0 0 1px rgba(228, 193, 145, 0.45);
+      display: grid;
+      gap: 10px;
+    }
+
+    .collection-card h3 {
+      margin: 0;
+    }
+
+    .collection-card p {
+      margin: 0;
+      color: #657083;
+      line-height: 1.7;
     }
 
     .footer-note {
@@ -496,13 +434,13 @@
       font-size: 0.92rem;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
       .layout {
         grid-template-columns: 1fr;
       }
 
-      .vehicle-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      .collection-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -518,15 +456,19 @@
         border-radius: 24px;
       }
 
-      .vehicle-grid,
-      .pill-group {
-        grid-template-columns: 1fr;
-      }
-
       .moon {
         width: 88px;
         height: 88px;
         right: 6vw;
+      }
+
+      .demo-actions {
+        display: grid;
+      }
+
+      .hero-note,
+      .tag {
+        font-size: 0.84rem;
       }
     }
   </style>
@@ -551,16 +493,24 @@
 
   <main class="wrap">
     <section class="hero">
-      <div class="eyebrow">月亮出来了 · 小工程车要睡觉了</div>
+      <div class="eyebrow">Xiaoxiao 晚安声音 Demo · 静态预生成音频</div>
       <h1>晚安小工程车</h1>
-      <p>给 2 岁宝宝的安静睡前故事。选一辆温柔的小车车，选一个合适的时长，轻轻开始今晚的晚安时间。</p>
+      <p class="hero-copy">
+        这是一个更接近产品展示的静态 Demo。今晚不再依赖浏览器即时朗读，主体验改为播放仓库内预生成的
+        <strong>edge-tts · zh-CN-XiaoxiaoNeural</strong> 本地音频，让你更稳定地感受温柔、轻软、适合睡前的晚安声音。
+      </p>
+      <div class="hero-notes">
+        <span class="hero-note">主体验: 本地 MP3 播放</span>
+        <span class="hero-note">适合 GitHub Pages</span>
+        <span class="hero-note">更适合手机直接点开试听</span>
+      </div>
 
       <div class="ambient-panel">
         <div>
           <strong>夜晚氛围</strong>
           <div class="ambient-options" id="ambientOptions">
-            <button class="ambient-chip active" data-ambient="low">安静一点</button>
-            <button class="ambient-chip" data-ambient="medium">刚刚好</button>
+            <button class="ambient-chip" data-ambient="low">安静一点</button>
+            <button class="ambient-chip active" data-ambient="medium">刚刚好</button>
             <button class="ambient-chip" data-ambient="high">星星多一点</button>
           </div>
         </div>
@@ -578,486 +528,115 @@
     </section>
 
     <section class="layout">
-      <div class="card">
-        <h2>1. 选一个晚安伙伴</h2>
-        <p class="subtle">每一辆车车都忙了一天。现在它们都想洗一洗，慢慢停好，轻轻睡着。</p>
-        <div class="vehicle-grid" id="vehicleGrid"></div>
+      <div class="stack">
+        <section class="card">
+          <h2>今夜试听 / Xiaoxiao 晚安声音</h2>
+          <p class="subtle">
+            每一段试听都已经预先生成并放在仓库里。点击卡片里的按钮，就能直接切到对应晚安片段播放，不需要任何后端。
+          </p>
+          <div class="demo-grid" id="demoGrid"></div>
+        </section>
 
-        <h2 style="margin-top: 20px;">2. 选故事时长</h2>
-        <p class="subtle">短一点，快快睡。长一点，多抱抱，多听几句温柔的话。</p>
-        <div class="pill-group" id="lengthGroup"></div>
-
-        <div class="actions">
-          <button class="primary-btn" id="generateBtn">生成今晚故事</button>
-          <button class="secondary-btn" id="surpriseBtn">随机一个</button>
-        </div>
+        <section class="card">
+          <h2>这个 Demo 在展示什么</h2>
+          <p class="subtle">主页保留晚安产品感，但主路径聚焦在可直接托管、可稳定复现的 Xiaoxiao 真实音频试听。</p>
+          <div class="feature-list">
+            <div class="feature-item">更像产品 Demo，而不是浏览器原生语音测试页。页面会先推荐一个今晚可直接试听的晚安场景。</div>
+            <div class="feature-item">音频文件全部走本地静态资源路径，部署到 GitHub Pages 后依然可直接播放。</div>
+            <div class="feature-item">如果后续要扩充内容，只需要继续往 `samples/xiaoxiao/` 放入新的 MP3，再更新这页的数据数组即可。</div>
+          </div>
+        </section>
       </div>
 
-      <div class="card story-card">
+      <section class="card now-playing">
         <div>
-          <h2>今晚的故事</h2>
-          <div class="story-meta">
-            <div class="story-tag" id="storyVehicleTag">角色未选择</div>
-            <div class="story-tag" id="storyLengthTag">时长未选择</div>
-          </div>
+          <h2>今晚正在播放</h2>
+          <div class="meta-row" id="currentTags"></div>
         </div>
 
-        <div class="story-box">
-          <h3 class="story-title" id="storyTitle">月亮等着你</h3>
-          <p class="story-text" id="storyText">点一下“生成今晚故事”，这里会出现一段柔柔的睡前故事。句子会短一点，慢一点，适合 2 岁宝宝听。</p>
+        <div class="player-shell">
+          <p class="story-title" id="currentTitle">月亮小车库</p>
+          <p class="story-text" id="currentDescription">点左侧任意一段 Xiaoxiao 晚安声音，就能在这里开始播放。</p>
+          <audio id="mainPlayer" controls preload="metadata">
+            <source id="mainSource" src="./samples/xiaoxiao/moonlit-garage.mp3" type="audio/mpeg">
+          </audio>
         </div>
 
-        <div>
-          <h3>朗读</h3>
-          <div class="tts-style-group" id="voiceStyleGroup"></div>
-          <div class="tts-controls">
-            <button class="control-btn" id="playBtn">播放</button>
-            <button class="control-btn" id="pauseBtn">暂停</button>
-            <button class="control-btn" id="stopBtn">停止</button>
-            <button class="favorite-btn" id="favoriteBtn">收藏这篇</button>
-          </div>
-          <p class="status" id="ttsStatus">如果浏览器支持语音朗读，就可以轻轻读出来。</p>
-          <p class="tts-tip">小提示：声音好不好听，还是会受手机、电脑和浏览器自带语音引擎影响。</p>
+        <div class="demo-actions">
+          <button class="primary-btn" id="playCurrentBtn">播放这一段</button>
+          <a class="ghost-btn" id="downloadCurrentBtn" href="./samples/xiaoxiao/moonlit-garage.mp3" download>下载当前音频</a>
+          <a class="secondary-btn" href="./voice-samples.html">查看声音对比页</a>
         </div>
-      </div>
+
+        <p class="status" id="playerStatus">当前默认加载的是 Xiaoxiao 晚安样本。建议直接戴耳机或在手机外放上试听。</p>
+      </section>
     </section>
 
     <section class="card" style="margin-top: 18px;">
-      <h2>收藏的小故事</h2>
-      <p class="subtle">喜欢的故事可以留在这里，下次睡前一键打开。</p>
-      <div class="favorites-list" id="favoritesList"></div>
+      <h2>晚安故事产品感</h2>
+      <p class="subtle">这里不是原始文件列表，而是一组适合首页展示的晚安内容入口。每个入口都保留了角色、时长、氛围和一句软软的故事说明。</p>
+      <div class="collection-grid">
+        <article class="collection-card">
+          <div class="meta-row">
+            <span class="tag">小挖掘机</span>
+            <span class="tag">约 35 秒</span>
+          </div>
+          <h3>月亮小车库</h3>
+          <p>洗干净的小铲斗慢慢收好，月亮把一小片光轻轻放在车顶上。</p>
+        </article>
+        <article class="collection-card">
+          <div class="meta-row">
+            <span class="tag">小卡车</span>
+            <span class="tag">约 35 秒</span>
+          </div>
+          <h3>风里慢慢回家</h3>
+          <p>软软的晚风陪着小卡车回到停车的小院子，今晚所有轮子都想早点睡。</p>
+        </article>
+        <article class="collection-card">
+          <div class="meta-row">
+            <span class="tag">小车车们</span>
+            <span class="tag">约 35 秒</span>
+          </div>
+          <h3>一起说晚安</h3>
+          <p>一排小工程车静静停好，星星像一盏盏小夜灯，把夜晚照得很安心。</p>
+        </article>
+      </div>
     </section>
 
-    <p class="footer-note">纯静态页面，可直接部署到 GitHub Pages。没有外部图片，没有外部音频，没有额外依赖。</p>
+    <p class="footer-note">纯静态页面，可直接部署到 GitHub Pages。主体验使用仓库内预生成 Xiaoxiao 音频，无需外部 TTS 服务。</p>
   </main>
 
   <script>
-    const vehicles = [
-      { id: "excavator", name: "小挖掘机", emoji: "🚜", hint: "小铲斗洗干净了，准备收起来。" },
-      { id: "crane", name: "小吊车", emoji: "🏗️", hint: "长长手臂慢慢放下，不再忙啦。" },
-      { id: "dump", name: "小翻斗车", emoji: "🚚", hint: "车斗空空的，今晚轻轻回家。" },
-      { id: "mixer", name: "小搅拌车", emoji: "🚛", hint: "圆圆桶不转了，安安静静。" },
-      { id: "roller", name: "小压路机", emoji: "🚧", hint: "圆滚滚轮子今天也辛苦了。" },
-      { id: "little-truck", name: "小卡车", emoji: "🛻", hint: "慢慢开，慢慢停，慢慢睡。" }
-    ];
-
-    const lengthOptions = [
-      { id: "short", label: "1 分钟", detail: "6 句左右，适合快快入睡", sentenceCount: 6 },
-      { id: "medium", label: "3 分钟", detail: "10 句左右，安静抱抱时听", sentenceCount: 10 },
-      { id: "long", label: "5 分钟", detail: "14 句左右，慢慢听到睡着", sentenceCount: 14 }
-    ];
-
-    const voiceStyles = [
-      { id: "extra-gentle", label: "更轻柔", detail: "最慢最软", rate: 0.72, pitch: 0.92, volume: 0.82 },
-      { id: "standard", label: "刚刚好", detail: "自然晚安", rate: 0.82, pitch: 0.98, volume: 0.9 },
-      { id: "slower", label: "更慢一点", detail: "一句一句听", rate: 0.76, pitch: 0.95, volume: 0.86 }
-    ];
-
-    const storyTemplates = [
+    const demoEntries = [
       {
-        id: "excavator-stars",
-        vehicle: "excavator",
-        title: "小挖掘机和月亮小铲子",
-        opening: [
-          "小挖掘机忙完啦。",
-          "小铲斗放低低。",
-          "天上有一把月亮小铲子。",
-          "月亮说，晚安呀，小挖掘机。 "
-        ],
-        middle: [
-          "小挖掘机点点头。",
-          "它把小轮子停好。",
-          "它把小灯灯关好。",
-          "它说，今天我挖了软软的土。",
-          "现在我要抱着夜风睡觉。",
-          "星星一闪，一闪。",
-          "小铲斗也轻轻晃一晃。",
-          "晚风说，睡吧，睡吧。 "
-        ],
-        closing: [
-          "小挖掘机不动了。",
-          "小肚子安安静静。",
-          "月亮轻轻照着它。",
-          "小挖掘机睡着啦。"
-        ]
+        id: "moonlit-garage",
+        title: "月亮小车库",
+        vehicle: "小挖掘机",
+        duration: "约 35 秒",
+        mood: "轻柔入睡",
+        blurb: "小挖掘机洗好小铲斗，回到暖暖小车库，月亮在门口轻轻等它睡着。",
+        script: "小挖掘机忙完啦。\n小铲斗收好了。\n小车库里有暖暖的小黄灯。\n月亮说，晚安呀，小挖掘机。\n它慢慢停好轮子。\n也慢慢闭上眼睛。\n这一夜，安安静静，甜甜睡。",
+        src: "./samples/xiaoxiao/moonlit-garage.mp3"
       },
       {
-        id: "excavator-blanket",
-        vehicle: "excavator",
-        title: "小挖掘机的云朵被子",
-        opening: [
-          "晚上到了。",
-          "小挖掘机回到小车库。",
-          "车库里暖暖的。",
-          "门口挂着一朵白白的云。 "
-        ],
-        middle: [
-          "云朵像一条小被子。",
-          "盖在小挖掘机身上。",
-          "小挖掘机说，好软呀。",
-          "今天的沙沙土，明天再见。",
-          "今天的小石头，明天再见。",
-          "小铲斗收起来了。",
-          "小车身也放松了。",
-          "云朵轻轻拍一拍。 "
-        ],
-        closing: [
-          "拍一拍，睡一睡。",
-          "月亮笑一笑。",
-          "小挖掘机闭上眼睛。",
-          "呼，晚安。"
-        ]
+        id: "wind-down-yard",
+        title: "风里慢慢回家",
+        vehicle: "小卡车",
+        duration: "约 35 秒",
+        mood: "晚风陪伴",
+        blurb: "小卡车沿着软软的夜路回家，风很轻，灯很暖，整个停车小院都在一起慢慢安静下来。",
+        script: "小卡车回家啦。\n晚风轻轻吹。\n小车灯变得暖暖的。\n路边的小草也快要睡了。\n小卡车慢慢停好。\n把今天的忙碌轻轻放下。\n风很轻，夜很安稳，晚安。",
+        src: "./samples/xiaoxiao/wind-down-yard.mp3"
       },
       {
-        id: "excavator-garage",
-        vehicle: "excavator",
-        title: "小挖掘机回到暖暖小车库",
-        opening: [
-          "夜空蓝蓝的。",
-          "小挖掘机慢慢回家。",
-          "小车库的小灯，已经亮起来了。",
-          "门口还有一颗一闪一闪的小星星。 "
-        ],
-        middle: [
-          "小挖掘机轻轻开进去。",
-          "小轮子停好啦。",
-          "小铲斗收好啦。",
-          "暖暖的灯光照着它。",
-          "像一只软软的小手。",
-          "小工具们也在旁边打哈欠。",
-          "小刷子要睡了。",
-          "小扳手也要睡了。 "
-        ],
-        closing: [
-          "小车库安安静静。",
-          "月亮在窗边看一看。",
-          "小挖掘机做了一个甜甜的梦。",
-          "梦里有软软的云和亮亮的星。"
-        ]
-      },
-      {
-        id: "crane-moon",
-        vehicle: "crane",
-        title: "小吊车把月亮轻轻放好",
-        opening: [
-          "小吊车今天很温柔。",
-          "它没有大声响。",
-          "它慢慢抬起长长手臂。",
-          "它和月亮打招呼。 "
-        ],
-        middle: [
-          "月亮圆圆的，亮亮的。",
-          "像一盏小夜灯。",
-          "小吊车看一看。",
-          "再慢慢把手臂放下。",
-          "高高的工作结束啦。",
-          "现在是低低的晚安时间。",
-          "星星排成一队。",
-          "像在说，晚安，小吊车。 "
-        ],
-        closing: [
-          "小吊车停好脚脚。",
-          "长手臂安静躺下。",
-          "晚风吹过来。",
-          "它睡得甜甜的。"
-        ]
-      },
-      {
-        id: "crane-stars",
-        vehicle: "crane",
-        title: "小吊车帮星星找好位置",
-        opening: [
-          "小吊车抬头看看天。",
-          "今夜的星星好多呀。",
-          "一颗在左边。",
-          "一颗在右边。 "
-        ],
-        middle: [
-          "小吊车笑一笑。",
-          "它说，大家都排好队啦。",
-          "长长手臂慢慢放下来。",
-          "不高高举着了。",
-          "小灯灯也轻轻暗下来。",
-          "像在说，快睡吧。",
-          "小星星一闪一闪。",
-          "像给它盖上小被子。 "
-        ],
-        closing: [
-          "小吊车靠着小车库。",
-          "晚风轻轻绕过去。",
-          "它听着星星眨眼睛。",
-          "慢慢就睡着啦。"
-        ]
-      },
-      {
-        id: "dump-sand",
-        vehicle: "dump",
-        title: "小翻斗车送走最后一粒沙",
-        opening: [
-          "小翻斗车回家啦。",
-          "它的车斗空空的。",
-          "最后一粒小沙沙，也回家啦。",
-          "小翻斗车好轻松。 "
-        ],
-        middle: [
-          "车轮转得慢慢的。",
-          "慢慢的，慢慢的。",
-          "路边的小草睡了。",
-          "路边的小花睡了。",
-          "小翻斗车也想睡。",
-          "它轻轻说，我今天真棒。",
-          "我运了好多沙沙。",
-          "现在我要休息啦。 "
-        ],
-        closing: [
-          "车斗放平平。",
-          "小车灯关掉了。",
-          "月亮像妈妈一样看着它。",
-          "小翻斗车睡着啦。"
-        ]
-      },
-      {
-        id: "dump-garage",
-        vehicle: "dump",
-        title: "小翻斗车的星星停车位",
-        opening: [
-          "小翻斗车回到停车的小院子。",
-          "院子里有暖暖的小灯。",
-          "地上画着一颗星星。",
-          "那是它的晚安停车位。 "
-        ],
-        middle: [
-          "小翻斗车慢慢倒车。",
-          "轻轻停好。",
-          "不碰到这里。",
-          "也不碰到那里。",
-          "车斗空空的，很轻很轻。",
-          "小路软软的，很安静很安静。",
-          "小院子的工具箱合上了。",
-          "小扫把也靠着墙休息。 "
-        ],
-        closing: [
-          "一盏灯亮着小小的光。",
-          "月亮照着星星停车位。",
-          "小翻斗车打了一个小哈欠。",
-          "安安稳稳睡着啦。"
-        ]
-      },
-      {
-        id: "mixer-lullaby",
-        vehicle: "mixer",
-        title: "小搅拌车的圆圆摇篮曲",
-        opening: [
-          "小搅拌车的圆圆桶，停下来啦。",
-          "不转啦，不转啦。",
-          "夜晚轻轻抱住它。",
-          "天上有安静的月亮。 "
-        ],
-        middle: [
-          "小搅拌车听见一首摇篮曲。",
-          "是风在唱。",
-          "呼呀，呼呀。",
-          "是树叶在唱。",
-          "沙呀，沙呀。",
-          "小搅拌车闭上眼睛。",
-          "圆圆桶像小摇篮。",
-          "轻轻摇，轻轻摇。 "
-        ],
-        closing: [
-          "摇一摇，睡一睡。",
-          "小车身暖暖的。",
-          "月亮说，乖孩子。",
-          "小搅拌车睡着啦。"
-        ]
-      },
-      {
-        id: "mixer-lights",
-        vehicle: "mixer",
-        title: "小搅拌车和门口的小黄灯",
-        opening: [
-          "小搅拌车回家啦。",
-          "门口有一盏小黄灯。",
-          "灯光软软的。",
-          "像一团暖暖的小棉花。 "
-        ],
-        middle: [
-          "圆圆桶今天不转了。",
-          "它想安静一会儿。",
-          "小黄灯照着车轮。",
-          "也照着小小的影子。",
-          "小影子靠在地上。",
-          "像在陪它一起睡。",
-          "天上的月亮弯弯的。",
-          "像在轻轻笑。 "
-        ],
-        closing: [
-          "小搅拌车慢慢合上眼睛。",
-          "小黄灯陪着它。",
-          "屋外有星星，屋里有暖光。",
-          "这一夜睡得香香的。"
-        ]
-      },
-      {
-        id: "roller-road",
-        vehicle: "roller",
-        title: "小压路机和软软晚安路",
-        opening: [
-          "小压路机今天走过长长的路。",
-          "现在，路安静了。",
-          "小压路机也安静了。",
-          "它要走最后一条晚安路。 "
-        ],
-        middle: [
-          "这条路软软的。",
-          "这条路暖暖的。",
-          "路的两边有小灯灯。",
-          "小灯灯像小星星。",
-          "小压路机慢慢滚。",
-          "滚一滚，停一停。",
-          "再滚一滚，再停一停。",
-          "回到自己的小位置。 "
-        ],
-        closing: [
-          "轮子不转啦。",
-          "身体也不累啦。",
-          "晚安路到了。",
-          "小压路机睡着啦。"
-        ]
-      },
-      {
-        id: "roller-garden",
-        vehicle: "roller",
-        title: "小压路机走过月光小路",
-        opening: [
-          "月亮把小路照得亮亮的。",
-          "小压路机慢慢走过去。",
-          "它今天只做一件事。",
-          "就是走一条晚安小路。 "
-        ],
-        middle: [
-          "小路一点也不急。",
-          "小路软软的。",
-          "小路边有睡着的小花。",
-          "还有闭着眼睛的小草。",
-          "小压路机滚一滚。",
-          "再停一停。",
-          "像在给小路拍拍背。",
-          "说，睡吧，睡吧。 "
-        ],
-        closing: [
-          "月光落在圆圆轮子上。",
-          "小压路机也安静下来。",
-          "它靠着小树影。",
-          "甜甜地睡着啦。"
-        ]
-      },
-      {
-        id: "little-truck-milk",
-        vehicle: "little-truck",
-        title: "小卡车送来一车晚安",
-        opening: [
-          "小卡车今天装的不是石头。",
-          "也不是木头。",
-          "它装了一车晚安。",
-          "一车软软的晚安。 "
-        ],
-        middle: [
-          "晚安里有小月亮。",
-          "晚安里有小星星。",
-          "晚安里有抱抱。",
-          "还有轻轻的亲亲。",
-          "小卡车开呀开。",
-          "开到小床边。",
-          "把晚安全都放下来。",
-          "房间一下子暖暖的。 "
-        ],
-        closing: [
-          "小卡车轻轻停好。",
-          "它说，今天送完啦。",
-          "谢谢你，晚安呀。",
-          "小卡车睡着啦。"
-        ]
-      },
-      {
-        id: "little-truck-lantern",
-        vehicle: "little-truck",
-        title: "小卡车带着小灯回家",
-        opening: [
-          "小卡车的车顶上，有一盏小小灯。",
-          "不是大大的灯。",
-          "是睡前的小灯。",
-          "暖暖的，黄黄的。 "
-        ],
-        middle: [
-          "小卡车开过软软的路。",
-          "路边的树影摇一摇。",
-          "像在挥手说晚安。",
-          "小卡车轻轻答应。",
-          "它把小灯带回小车库。",
-          "把安静也一起带回去。",
-          "门口的小凳子睡了。",
-          "小工具箱也睡了。 "
-        ],
-        closing: [
-          "小卡车停在暖光里。",
-          "小灯慢慢暗下来。",
-          "窗外有月亮，窗里有安稳。",
-          "小卡车呼呼睡着啦。"
-        ]
-      },
-      {
-        id: "friends-yard",
-        vehicle: "all",
-        title: "小车车们一起说晚安",
-        opening: [
-          "晚上了，小车车们都回来了。",
-          "小挖掘机回来了。",
-          "小吊车回来了。",
-          "小翻斗车也回来了。 "
-        ],
-        middle: [
-          "小搅拌车不转了。",
-          "小压路机不滚了。",
-          "小卡车慢慢停下。",
-          "大家排成一排。",
-          "你看我，我看你。",
-          "大家都轻轻笑。",
-          "今天辛苦啦。",
-          "现在一起睡吧。 "
-        ],
-        closing: [
-          "月亮盖上银色小被子。",
-          "星星说，晚安，晚安。",
-          "小车车们都不动了。",
-          "它们一起睡着啦。"
-        ]
-      },
-      {
-        id: "friends-garage",
-        vehicle: "all",
-        title: "小车库里的暖暖晚安灯",
-        opening: [
-          "小车车们一辆一辆回家。",
-          "小车库亮起暖暖的灯。",
-          "门口的小牌子写着。",
-          "欢迎回家，小宝贝们。 "
-        ],
-        middle: [
-          "小挖掘机停左边。",
-          "小吊车停右边。",
-          "小翻斗车和小卡车排成一排。",
-          "小搅拌车安静极了。",
-          "小压路机也不滚了。",
-          "小工具们在角落里打哈欠。",
-          "小刷子睡了。",
-          "小扳手也睡了。 "
-        ],
-        closing: [
-          "月亮在窗上挂了一会儿。",
-          "星星在屋顶眨了眨眼。",
-          "小车库暖暖的，静静的。",
-          "大家一起睡进甜甜梦里。"
-        ]
+        id: "sweet-dream-convoy",
+        title: "一起说晚安",
+        vehicle: "小车车们",
+        duration: "约 35 秒",
+        mood: "甜梦收尾",
+        blurb: "小挖掘机、小卡车和朋友们都回来了，一排排安静停好，把今晚的甜梦排成一条柔软的小路。",
+        script: "晚上到了。\n小车车们都回来了。\n小挖掘机停左边。\n小卡车停右边。\n大家都轻轻笑一笑。\n月亮盖上银色的小被子。\n今夜一起甜甜地睡着啦。",
+        src: "./samples/xiaoxiao/sweet-dream-convoy.mp3"
       }
     ];
 
@@ -1068,562 +647,152 @@
       wheels: "远远的车轮慢慢过去。咕噜，咕噜。然后又安静了。"
     };
 
-    const favoritesKey = "bedtime-trucks-favorites";
-    const ambientKey = "bedtime-trucks-ambient";
-    const noiseKey = "bedtime-trucks-noise";
-    const voiceStyleKey = "bedtime-trucks-voice-style";
+    const ambientKey = "bedtime-trucks-static-ambient";
+    const noiseKey = "bedtime-trucks-static-noise";
+    const lastTrackKey = "bedtime-trucks-static-track";
 
-    let selectedVehicle = vehicles[0].id;
-    let selectedLength = lengthOptions[1].id;
-    let selectedVoiceStyle = voiceStyles[1].id;
-    let currentStory = null;
-    let favorites = [];
-    let utterance = null;
-    let availableVoices = [];
-    let speechState = "idle";
-    let speechToken = 0;
-    let isStoppingSpeech = false;
+    let currentEntry = demoEntries[0];
 
-    const vehicleGrid = document.getElementById("vehicleGrid");
-    const lengthGroup = document.getElementById("lengthGroup");
-    const voiceStyleGroup = document.getElementById("voiceStyleGroup");
-    const storyTitle = document.getElementById("storyTitle");
-    const storyText = document.getElementById("storyText");
-    const storyVehicleTag = document.getElementById("storyVehicleTag");
-    const storyLengthTag = document.getElementById("storyLengthTag");
-    const favoritesList = document.getElementById("favoritesList");
-    const ttsStatus = document.getElementById("ttsStatus");
-    const favoriteBtn = document.getElementById("favoriteBtn");
+    const body = document.body;
+    const demoGrid = document.getElementById("demoGrid");
+    const currentTitle = document.getElementById("currentTitle");
+    const currentDescription = document.getElementById("currentDescription");
+    const currentTags = document.getElementById("currentTags");
+    const mainPlayer = document.getElementById("mainPlayer");
+    const mainSource = document.getElementById("mainSource");
+    const downloadCurrentBtn = document.getElementById("downloadCurrentBtn");
+    const playCurrentBtn = document.getElementById("playCurrentBtn");
+    const playerStatus = document.getElementById("playerStatus");
     const noiseCue = document.getElementById("noiseCue");
 
-    function renderVehicles() {
-      vehicleGrid.innerHTML = vehicles.map((vehicle) => `
-        <button class="choice-btn ${vehicle.id === selectedVehicle ? "active" : ""}" data-vehicle="${vehicle.id}">
-          <div class="emoji">${vehicle.emoji}</div>
-          <strong>${vehicle.name}</strong>
-          <span>${vehicle.hint}</span>
-        </button>
-      `).join("");
-    }
-
-    function renderLengths() {
-      lengthGroup.innerHTML = lengthOptions.map((option) => `
-        <button class="pill-btn ${option.id === selectedLength ? "active" : ""}" data-length="${option.id}">
-          <strong>${option.label}</strong>
-          <span>${option.detail}</span>
-        </button>
-      `).join("");
-    }
-
-    function renderVoiceStyles() {
-      voiceStyleGroup.innerHTML = voiceStyles.map((style) => `
-        <button class="pill-btn ${style.id === selectedVoiceStyle ? "active" : ""}" data-voice-style="${style.id}">
-          <strong>${style.label}</strong>
-          <span>${style.detail}</span>
-        </button>
-      `).join("");
-    }
-
-    function pickSleepyTitle(template, vehicle, lengthOption) {
-      const suffixMap = {
-        short: "轻轻篇",
-        medium: "晚安篇",
-        long: "甜梦长长篇"
-      };
-      const suffix = suffixMap[lengthOption.id];
-      if (template.vehicle === "all") {
-        return `${template.title} · ${suffix}`;
-      }
-      const options = [
-        template.title,
-        `${vehicle.name}的${suffix}`,
-        `${vehicle.name}今夜的小梦`,
-        `${template.title} · ${suffix}`
-      ];
-      return options[(template.title.length + lengthOption.sentenceCount) % options.length];
-    }
-
-    function buildExtraSleepyLines(vehicle) {
-      return [
-        `${vehicle.name}听见小星星轻轻说，晚安呀。`,
-        `小车库里的暖黄灯，也在轻轻陪着${vehicle.name}。`,
-        "软软的夜路不说话，只安静地发着小小的光。",
-        "旁边的小刷子睡了，小扳手也睡了。",
-        "月亮把一小片银光，放在它的车顶上。",
-        "风很轻，灯很暖，夜晚像一条软软的小被子。",
-        `${vehicle.name}不着急，只想慢慢停好，慢慢做梦。`
-      ];
-    }
-
-    function buildStory(template, lengthId, vehicleId) {
-      const lengthOption = lengthOptions.find((item) => item.id === lengthId);
-      const vehicle = vehicles.find((item) => item.id === vehicleId);
-      const baseLines = [...template.opening];
-      const combinedMiddle = [...template.middle];
-      const ending = [...template.closing];
-      const desired = lengthOption.sentenceCount;
-      const lines = [];
-      const extraLines = buildExtraSleepyLines(vehicle);
-      let extraIndex = 0;
-
-      while (lines.length < desired) {
-        const sequence = [...baseLines, ...combinedMiddle, ...ending];
-        for (const line of sequence) {
-          if (lines.length >= desired) {
-            break;
-          }
-          lines.push(line.trim());
-        }
-        if (desired <= sequence.length) {
-          break;
-        }
-        combinedMiddle.push(extraLines[extraIndex % extraLines.length]);
-        combinedMiddle.push("安安静静，甜甜睡。");
-        extraIndex += 1;
-      }
-
-      const lengthLabel = lengthOption.label;
-      const title = pickSleepyTitle(template, vehicle, lengthOption);
-
-      return {
-        id: `${template.id}-${lengthId}-${Date.now()}`,
-        templateId: template.id,
-        vehicleId,
-        vehicleName: vehicle.name,
-        lengthId,
-        lengthLabel,
-        title,
-        text: lines.join("\n"),
-        createdAt: new Date().toISOString()
-      };
-    }
-
-    function generateStory(forceVehicleId, forceLengthId) {
-      const vehicleId = forceVehicleId || selectedVehicle;
-      const lengthId = forceLengthId || selectedLength;
-      const pool = storyTemplates.filter((template) => template.vehicle === vehicleId || template.vehicle === "all");
-      const template = pool[Math.floor(Math.random() * pool.length)];
-      currentStory = buildStory(template, lengthId, vehicleId);
-      renderCurrentStory();
-      stopSpeech();
-    }
-
-    function renderCurrentStory() {
-      if (!currentStory) {
-        return;
-      }
-      storyTitle.textContent = currentStory.title;
-      storyText.textContent = currentStory.text;
-      storyVehicleTag.textContent = currentStory.vehicleName;
-      storyLengthTag.textContent = currentStory.lengthLabel;
-      syncFavoriteButton();
-    }
-
-    function loadFavorites() {
-      try {
-        favorites = JSON.parse(localStorage.getItem(favoritesKey) || "[]");
-      } catch (error) {
-        favorites = [];
-      }
-    }
-
-    function saveFavorites() {
-      localStorage.setItem(favoritesKey, JSON.stringify(favorites));
-    }
-
-    function renderFavorites() {
-      if (!favorites.length) {
-        favoritesList.innerHTML = `<div class="empty-state">还没有收藏。等你找到一篇宝宝喜欢的晚安故事，再把它轻轻留在这里。</div>`;
-        return;
-      }
-
-      favoritesList.innerHTML = favorites.slice().reverse().map((item) => `
-        <article class="favorite-item">
-          <h4>${item.title}</h4>
-          <div class="story-meta">
-            <div class="story-tag">${item.vehicleName}</div>
-            <div class="story-tag">${item.lengthLabel}</div>
+    function renderEntries() {
+      demoGrid.innerHTML = demoEntries.map((entry) => `
+        <article class="demo-card ${entry.id === currentEntry.id ? "active" : ""}">
+          <div class="meta-row">
+            <span class="tag">Xiaoxiao</span>
+            <span class="tag">${entry.vehicle}</span>
+            <span class="tag">${entry.duration}</span>
           </div>
-          <p>${item.text}</p>
-          <div class="row">
-            <button class="tiny-btn" data-load-favorite="${item.id}">打开</button>
-            <button class="tiny-btn" data-delete-favorite="${item.id}">删除</button>
+          <div>
+            <h3>${entry.title}</h3>
+            <p>${entry.blurb}</p>
+          </div>
+          <div class="demo-actions">
+            <button class="primary-btn" data-play-entry="${entry.id}">试听这一段</button>
+            <a class="ghost-btn" href="${entry.src}" download>下载 MP3</a>
           </div>
         </article>
       `).join("");
     }
 
-    function syncFavoriteButton() {
-      const isFavorite = currentStory && favorites.some((item) => item.id === currentStory.id);
-      favoriteBtn.classList.toggle("active", Boolean(isFavorite));
-      favoriteBtn.textContent = isFavorite ? "已收藏" : "收藏这篇";
+    function updateCurrentPanel() {
+      currentTitle.textContent = currentEntry.title;
+      currentDescription.textContent = currentEntry.script;
+      currentTags.innerHTML = `
+        <span class="tag">zh-CN-XiaoxiaoNeural</span>
+        <span class="tag">${currentEntry.vehicle}</span>
+        <span class="tag">${currentEntry.duration}</span>
+        <span class="tag">${currentEntry.mood}</span>
+      `;
+      mainSource.src = currentEntry.src;
+      mainPlayer.load();
+      downloadCurrentBtn.href = currentEntry.src;
+      localStorage.setItem(lastTrackKey, currentEntry.id);
+      playerStatus.textContent = `已切换到《${currentEntry.title}》。这是仓库里的本地 MP3 资源，可直接静态部署。`;
+      renderEntries();
     }
 
-    function toggleFavorite() {
-      if (!currentStory) {
-        ttsStatus.textContent = "先生成一篇故事，再决定要不要收藏。";
+    function selectEntry(id, autoplay) {
+      const match = demoEntries.find((entry) => entry.id === id);
+      if (!match) {
         return;
       }
-
-      const existingIndex = favorites.findIndex((item) => item.id === currentStory.id);
-      if (existingIndex >= 0) {
-        favorites.splice(existingIndex, 1);
-      } else {
-        favorites.push(currentStory);
-      }
-
-      saveFavorites();
-      renderFavorites();
-      syncFavoriteButton();
-    }
-
-    function loadFavoriteById(id) {
-      const story = favorites.find((item) => item.id === id);
-      if (!story) {
-        return;
-      }
-      currentStory = story;
-      selectedVehicle = story.vehicleId;
-      selectedLength = story.lengthId;
-      renderVehicles();
-      renderLengths();
-      renderCurrentStory();
-      stopSpeech();
-    }
-
-    function deleteFavoriteById(id) {
-      favorites = favorites.filter((item) => item.id !== id);
-      saveFavorites();
-      renderFavorites();
-      syncFavoriteButton();
-    }
-
-    function supportsSpeech() {
-      return "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
-    }
-
-    function getVoiceStyle() {
-      return voiceStyles.find((item) => item.id === selectedVoiceStyle) || voiceStyles[1];
-    }
-
-    function scoreChineseVoice(voice) {
-      const name = voice.name.toLowerCase();
-      const lang = (voice.lang || "").toLowerCase();
-      let score = 0;
-
-      if (lang.startsWith("zh-cn") || lang.startsWith("cmn-hans")) score += 90;
-      else if (lang.startsWith("zh")) score += 72;
-
-      if (voice.localService) score += 10;
-
-      [
-        "ting-ting", "tingting", "mei-jia", "meijia", "sin-ji", "sinji",
-        "xiaoxiao", "yunxi", "huihui", "yaoyao", "kangkang",
-        "natural", "neural", "premium", "enhanced", "siri"
-      ].forEach((keyword) => {
-        if (name.includes(keyword)) score += 16;
-      });
-
-      [
-        "compact", "desktop", "google"
-      ].forEach((keyword) => {
-        if (name.includes(keyword)) score -= 4;
-      });
-
-      return score;
-    }
-
-    function refreshVoices() {
-      if (!supportsSpeech()) {
-        availableVoices = [];
-        return;
-      }
-      availableVoices = window.speechSynthesis.getVoices().slice();
-      updateTtsStatus();
-    }
-
-    function getBestChineseVoice() {
-      const chineseVoices = availableVoices.filter((voice) => /^zh|^cmn/i.test(voice.lang || ""));
-      if (!chineseVoices.length) {
-        return null;
-      }
-      return chineseVoices.sort((a, b) => scoreChineseVoice(b) - scoreChineseVoice(a))[0];
-    }
-
-    function updateTtsStatus(message) {
-      if (message) {
-        ttsStatus.textContent = message;
-        return;
-      }
-
-      if (!supportsSpeech()) {
-        ttsStatus.textContent = "当前浏览器不支持语音朗读，故事仍然可以正常使用。";
-        return;
-      }
-
-      if (!availableVoices.length) {
-        ttsStatus.textContent = "正在等浏览器准备朗读声音，请稍等一下再点播放。";
-        return;
-      }
-
-      const chineseVoice = getBestChineseVoice();
-      if (!chineseVoice) {
-        ttsStatus.textContent = "这个设备暂时没有可用的中文声音，仍可阅读故事文字。";
-        return;
-      }
-
-      const style = getVoiceStyle();
-      const modeLabelMap = {
-        idle: `已准备好中文朗读：${chineseVoice.name}，当前是“${style.label}”。`,
-        playing: `正在用“${style.label}”轻轻朗读。`,
-        paused: "朗读暂停了，再点播放会继续。",
-        error: "这次朗读没有成功，可以再点一次播放。"
-      };
-
-      ttsStatus.textContent = modeLabelMap[speechState] || modeLabelMap.idle;
-    }
-
-    function createUtterance() {
-      if (!currentStory || !supportsSpeech()) {
-        return null;
-      }
-      const nextUtterance = new SpeechSynthesisUtterance(currentStory.text);
-      nextUtterance.lang = "zh-CN";
-      const style = getVoiceStyle();
-      nextUtterance.rate = style.rate;
-      nextUtterance.pitch = style.pitch;
-      nextUtterance.volume = style.volume;
-
-      const chineseVoice = getBestChineseVoice();
-      if (chineseVoice) {
-        nextUtterance.voice = chineseVoice;
-      }
-
-      const token = ++speechToken;
-
-      nextUtterance.onstart = () => {
-        if (token !== speechToken) {
-          return;
+      currentEntry = match;
+      updateCurrentPanel();
+      if (autoplay) {
+        const playPromise = mainPlayer.play();
+        if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch(() => {
+            playerStatus.textContent = `已切换到《${currentEntry.title}》。如果浏览器拦截了自动播放，点一下播放器上的播放键即可。`;
+          });
         }
-        speechState = "playing";
-        updateTtsStatus();
-      };
-      nextUtterance.onpause = () => {
-        if (token !== speechToken || isStoppingSpeech) {
-          return;
-        }
-        speechState = "paused";
-        updateTtsStatus();
-      };
-      nextUtterance.onresume = () => {
-        if (token !== speechToken || isStoppingSpeech) {
-          return;
-        }
-        speechState = "playing";
-        updateTtsStatus();
-      };
-      nextUtterance.onend = () => {
-        if (token !== speechToken) {
-          return;
-        }
-        utterance = null;
-        speechState = "idle";
-        if (isStoppingSpeech) {
-          isStoppingSpeech = false;
-          updateTtsStatus("朗读已经停下来了。");
-          return;
-        }
-        updateTtsStatus("朗读结束啦，晚安。");
-      };
-      nextUtterance.onerror = () => {
-        if (token !== speechToken) {
-          return;
-        }
-        utterance = null;
-        speechState = "error";
-        isStoppingSpeech = false;
-        updateTtsStatus();
-      };
-
-      return nextUtterance;
-    }
-
-    function playSpeech() {
-      if (!currentStory) {
-        ttsStatus.textContent = "先生成一篇故事，再开始朗读。";
-        return;
-      }
-      if (!supportsSpeech()) {
-        updateTtsStatus();
-        return;
-      }
-
-      refreshVoices();
-
-      if (!getBestChineseVoice()) {
-        updateTtsStatus();
-        return;
-      }
-
-      if (window.speechSynthesis.paused) {
-        speechState = "playing";
-        window.speechSynthesis.resume();
-        return;
-      }
-
-      if (window.speechSynthesis.speaking) {
-        updateTtsStatus("已经在朗读了。");
-        return;
-      }
-
-      stopSpeech(false);
-      isStoppingSpeech = false;
-      utterance = createUtterance();
-      if (utterance) {
-        window.speechSynthesis.speak(utterance);
       }
     }
 
-    function pauseSpeech() {
-      if (!supportsSpeech()) {
-        updateTtsStatus();
-        return;
-      }
-      if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
-        window.speechSynthesis.pause();
-      } else if (window.speechSynthesis.paused) {
-        updateTtsStatus("现在已经是暂停状态了。");
-      } else {
-        updateTtsStatus("现在还没有开始朗读。");
-      }
-    }
-
-    function stopSpeech(resetStatus = true) {
-      if (supportsSpeech()) {
-        speechToken += 1;
-        isStoppingSpeech = window.speechSynthesis.speaking || window.speechSynthesis.paused;
-        window.speechSynthesis.cancel();
-      }
-      utterance = null;
-      speechState = "idle";
-      isStoppingSpeech = false;
-      if (resetStatus) {
-        updateTtsStatus();
-      }
-    }
-
-    function applyAmbient(level) {
-      document.body.classList.remove("ambient-low", "ambient-medium", "ambient-high");
-      document.body.classList.add(`ambient-${level}`);
+    function setAmbient(level) {
+      body.classList.remove("ambient-low", "ambient-medium", "ambient-high");
+      body.classList.add(`ambient-${level}`);
       localStorage.setItem(ambientKey, level);
       document.querySelectorAll("[data-ambient]").forEach((button) => {
         button.classList.toggle("active", button.dataset.ambient === level);
       });
     }
 
-    function applyNoise(noise) {
-      noiseCue.textContent = noiseMap[noise];
-      localStorage.setItem(noiseKey, noise);
+    function setNoise(mode) {
+      noiseCue.textContent = noiseMap[mode] || noiseMap.none;
+      localStorage.setItem(noiseKey, mode);
       document.querySelectorAll("[data-noise]").forEach((button) => {
-        button.classList.toggle("active", button.dataset.noise === noise);
+        button.classList.toggle("active", button.dataset.noise === mode);
       });
     }
 
-    function pickRandomSetup() {
-      selectedVehicle = vehicles[Math.floor(Math.random() * vehicles.length)].id;
-      selectedLength = lengthOptions[Math.floor(Math.random() * lengthOptions.length)].id;
-      renderVehicles();
-      renderLengths();
-      generateStory();
-    }
-
-    function bindEvents() {
-      vehicleGrid.addEventListener("click", (event) => {
-        const button = event.target.closest("[data-vehicle]");
-        if (!button) {
-          return;
-        }
-        selectedVehicle = button.dataset.vehicle;
-        renderVehicles();
-      });
-
-      lengthGroup.addEventListener("click", (event) => {
-        const button = event.target.closest("[data-length]");
-        if (!button) {
-          return;
-        }
-        selectedLength = button.dataset.length;
-        renderLengths();
-      });
-
-      voiceStyleGroup.addEventListener("click", (event) => {
-        const button = event.target.closest("[data-voice-style]");
-        if (!button) {
-          return;
-        }
-        selectedVoiceStyle = button.dataset.voiceStyle;
-        localStorage.setItem(voiceStyleKey, selectedVoiceStyle);
-        renderVoiceStyles();
-        stopSpeech(false);
-        speechState = "idle";
-        updateTtsStatus();
-      });
-
-      document.getElementById("generateBtn").addEventListener("click", () => generateStory());
-      document.getElementById("surpriseBtn").addEventListener("click", pickRandomSetup);
-      document.getElementById("playBtn").addEventListener("click", playSpeech);
-      document.getElementById("pauseBtn").addEventListener("click", pauseSpeech);
-      document.getElementById("stopBtn").addEventListener("click", () => stopSpeech());
-      favoriteBtn.addEventListener("click", toggleFavorite);
-
-      document.getElementById("ambientOptions").addEventListener("click", (event) => {
-        const button = event.target.closest("[data-ambient]");
-        if (!button) {
-          return;
-        }
-        applyAmbient(button.dataset.ambient);
-      });
-
-      document.getElementById("noiseOptions").addEventListener("click", (event) => {
-        const button = event.target.closest("[data-noise]");
-        if (!button) {
-          return;
-        }
-        applyNoise(button.dataset.noise);
-      });
-
-      favoritesList.addEventListener("click", (event) => {
-        const loadButton = event.target.closest("[data-load-favorite]");
-        const deleteButton = event.target.closest("[data-delete-favorite]");
-        if (loadButton) {
-          loadFavoriteById(loadButton.dataset.loadFavorite);
-        }
-        if (deleteButton) {
-          deleteFavoriteById(deleteButton.dataset.deleteFavorite);
-        }
-      });
-
-      if (supportsSpeech()) {
-        refreshVoices();
-        window.speechSynthesis.onvoiceschanged = refreshVoices;
-      } else {
-        updateTtsStatus();
+    demoGrid.addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-play-entry]");
+      if (!trigger) {
+        return;
       }
-    }
+      selectEntry(trigger.dataset.playEntry, true);
+    });
+
+    playCurrentBtn.addEventListener("click", () => {
+      const playPromise = mainPlayer.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {
+          playerStatus.textContent = "浏览器拦截了自动播放。请直接点一下原生音频播放器中的播放键。";
+        });
+      }
+    });
+
+    document.getElementById("ambientOptions").addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-ambient]");
+      if (trigger) {
+        setAmbient(trigger.dataset.ambient);
+      }
+    });
+
+    document.getElementById("noiseOptions").addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-noise]");
+      if (trigger) {
+        setNoise(trigger.dataset.noise);
+      }
+    });
+
+    mainPlayer.addEventListener("play", () => {
+      playerStatus.textContent = `正在播放《${currentEntry.title}》, 声音来自预生成的 Xiaoxiao 本地样本。`;
+    });
+
+    mainPlayer.addEventListener("pause", () => {
+      if (!mainPlayer.ended) {
+        playerStatus.textContent = `《${currentEntry.title}》已暂停，可以稍后继续。`;
+      }
+    });
+
+    mainPlayer.addEventListener("ended", () => {
+      playerStatus.textContent = `《${currentEntry.title}》播放完成。今晚可以再点另一段继续听。`;
+    });
 
     function init() {
-      renderVehicles();
-      renderLengths();
-      selectedVoiceStyle = localStorage.getItem(voiceStyleKey) || selectedVoiceStyle;
-      renderVoiceStyles();
-      loadFavorites();
-      renderFavorites();
-      bindEvents();
-
-      applyAmbient(localStorage.getItem(ambientKey) || "medium");
-      applyNoise(localStorage.getItem(noiseKey) || "none");
-      generateStory();
-      updateTtsStatus();
+      const savedAmbient = localStorage.getItem(ambientKey) || "medium";
+      const savedNoise = localStorage.getItem(noiseKey) || "none";
+      const savedTrack = localStorage.getItem(lastTrackKey);
+      const savedEntry = demoEntries.find((entry) => entry.id === savedTrack);
+      if (savedEntry) {
+        currentEntry = savedEntry;
+      }
+      renderEntries();
+      setAmbient(savedAmbient);
+      setNoise(savedNoise);
+      updateCurrentPanel();
     }
 
     init();
