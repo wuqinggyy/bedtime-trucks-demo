@@ -12,7 +12,7 @@
 ## 这版包含什么
 
 - 一个重新整理过的首页 `index.html`
-- `今夜试听 / Xiaoxiao 晚安声音` 区块，展示 3 个本地晚安音频入口
+- `今夜试听 / Xiaoxiao 晚安声音` 区块，展示 4 个本地晚安音频入口
 - 本地静态音频播放器，支持移动端直接点击播放
 - 夜晚氛围和白噪音提示控制
 - 一个独立的 `voice-samples.html` 声音对比页
@@ -30,6 +30,7 @@ samples/xiaoxiao/
 - `samples/xiaoxiao/moonlit-garage.mp3`
 - `samples/xiaoxiao/wind-down-yard.mp3`
 - `samples/xiaoxiao/sweet-dream-convoy.mp3`
+- `samples/xiaoxiao/goodnight-construction-site.mp3`
 
 这些文件会被页面当作本地静态资源直接播放，不需要后端。
 
