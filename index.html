@@ -3,475 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>晚安小工程车 · Xiaoxiao 晚安声音 Demo</title>
-  <meta name="description" content="一个适合 2 岁宝宝的静态睡前故事音频 Demo，主体验使用 edge-tts 的 Xiaoxiao 预生成音频样本。">
-  <style>
-    :root {
-      --bg-top: #18324a;
-      --bg-bottom: #0e1f32;
-      --panel: rgba(255, 248, 239, 0.92);
-      --panel-strong: #fff7ed;
-      --panel-soft: rgba(255, 255, 255, 0.1);
-      --line: rgba(255, 255, 255, 0.18);
-      --text: #2d3546;
-      --muted: #687388;
-      --accent: #f7c98a;
-      --accent-strong: #efb86a;
-      --accent-deep: #d8895d;
-      --secondary: #b9d8d0;
-      --night: #f8f1de;
-      --success: #88b49c;
-      --shadow: 0 24px 60px rgba(7, 18, 34, 0.26);
-      --radius-xl: 32px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
-      --radius-sm: 14px;
-      --font-display: "Trebuchet MS", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      --font-body: "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
-      --star-opacity: 0.7;
-      --ambient-opacity: 1;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: var(--font-body);
-      color: #f7f4ee;
-      background:
-        radial-gradient(circle at top, rgba(255, 247, 237, 0.12), transparent 32%),
-        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
-      overflow-x: hidden;
-    }
-
-    body.ambient-low {
-      --star-opacity: 0.32;
-      --ambient-opacity: 0.6;
-    }
-
-    body.ambient-medium {
-      --star-opacity: 0.7;
-      --ambient-opacity: 1;
-    }
-
-    body.ambient-high {
-      --star-opacity: 1;
-      --ambient-opacity: 1.15;
-    }
-
-    .sky {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: var(--ambient-opacity);
-    }
-
-    .moon {
-      position: absolute;
-      top: 7vh;
-      right: 10vw;
-      width: 118px;
-      height: 118px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #fffdf5, #fde3ba 62%, rgba(253, 227, 186, 0.6) 75%);
-      box-shadow: 0 0 40px rgba(255, 236, 197, 0.4);
-    }
-
-    .moon::after {
-      content: "";
-      position: absolute;
-      inset: 14px 18px 18px 14px;
-      border-radius: 50%;
-      background: rgba(249, 239, 215, 0.22);
-    }
-
-    .star {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(255, 245, 222, 0.9);
-      box-shadow: 0 0 12px rgba(255, 246, 214, 0.6);
-      opacity: var(--star-opacity);
-      animation: twinkle var(--duration) ease-in-out infinite;
-      animation-delay: var(--delay);
-    }
-
-    @keyframes twinkle {
-      0%, 100% { transform: scale(0.9); opacity: calc(var(--star-opacity) * 0.55); }
-      50% { transform: scale(1.25); opacity: var(--star-opacity); }
-    }
-
-    .hills {
-      position: absolute;
-      left: -10vw;
-      right: -10vw;
-      bottom: -6vh;
-      height: 34vh;
-      background:
-        radial-gradient(circle at 20% 18%, rgba(165, 209, 192, 0.2), transparent 25%),
-        linear-gradient(180deg, rgba(108, 149, 144, 0.14), rgba(42, 68, 73, 0.58));
-      border-top-left-radius: 45% 100%;
-      border-top-right-radius: 45% 100%;
-      filter: blur(2px);
-    }
-
-    .wrap {
-      position: relative;
-      z-index: 1;
-      width: min(1120px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 24px 0 40px;
-    }
-
-    .hero {
-      padding: 22px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(14px);
-      border-radius: 28px;
-      box-shadow: 0 18px 48px rgba(3, 10, 20, 0.18);
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255, 248, 239, 0.12);
-      color: #fff5df;
-      font-size: 0.92rem;
-      letter-spacing: 0.02em;
-    }
-
-    h1 {
-      margin: 16px 0 10px;
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 6vw, 3.8rem);
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-    }
-
-    .hero-copy {
-      max-width: 700px;
-      margin: 0;
-      color: rgba(255, 247, 238, 0.88);
-      font-size: 1.04rem;
-      line-height: 1.7;
-    }
-
-    .hero-notes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .hero-note {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255, 248, 239, 0.12);
-      color: #fff5df;
-      font-size: 0.92rem;
-    }
-
-    .ambient-panel {
-      display: grid;
-      gap: 14px;
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-    }
-
-    .ambient-options,
-    .noise-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .ambient-chip {
-      border: 0;
-      border-radius: 999px;
-      padding: 10px 14px;
-      background: rgba(255, 248, 239, 0.14);
-      color: #fff3df;
-      cursor: pointer;
-      transition: background 0.2s ease, transform 0.2s ease;
-      font: inherit;
-    }
-
-    .ambient-chip:hover {
-      transform: translateY(-2px);
-    }
-
-    .ambient-chip.active {
-      background: rgba(247, 201, 138, 0.34);
-    }
-
-    .noise-cue {
-      margin: 0;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: rgba(255, 248, 239, 0.12);
-      color: #fff4e4;
-      min-height: 52px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .stack {
-      display: grid;
-      gap: 18px;
-    }
-
-    .card {
-      background: var(--panel);
-      color: var(--text);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-      padding: 22px;
-    }
-
-    .card h2,
-    .card h3 {
-      margin: 0 0 12px;
-      font-family: var(--font-display);
-      color: #263044;
-    }
-
-    .subtle {
-      color: var(--muted);
-      font-size: 0.96rem;
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    .demo-grid {
-      display: grid;
-      gap: 14px;
-      margin-top: 16px;
-    }
-
-    .demo-card {
-      display: grid;
-      gap: 14px;
-      padding: 18px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, #fffdf8, #fff4e8);
-      box-shadow: inset 0 0 0 1px rgba(225, 194, 149, 0.38);
-    }
-
-    .demo-card.active {
-      box-shadow: inset 0 0 0 2px rgba(216, 137, 93, 0.38), 0 18px 30px rgba(220, 167, 115, 0.16);
-    }
-
-    .meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: #fff0da;
-      color: #7a5437;
-      font-size: 0.88rem;
-    }
-
-    .demo-card p {
-      margin: 0;
-      color: #586174;
-      line-height: 1.7;
-    }
-
-    .demo-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .primary-btn,
-    .secondary-btn,
-    .ghost-btn {
-      border: 0;
-      border-radius: 999px;
-      padding: 13px 18px;
-      font: inherit;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, background 0.2s ease;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .primary-btn:hover,
-    .secondary-btn:hover,
-    .ghost-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .primary-btn {
-      background: linear-gradient(180deg, var(--accent), var(--accent-strong));
-      color: #543721;
-      box-shadow: 0 14px 26px rgba(228, 177, 112, 0.3);
-      font-weight: 700;
-    }
-
-    .secondary-btn {
-      background: #eff4f2;
-      color: #39565a;
-      font-weight: 700;
-    }
-
-    .ghost-btn {
-      background: rgba(255, 248, 239, 0.9);
-      color: #6d4f39;
-      box-shadow: inset 0 0 0 1px rgba(225, 194, 149, 0.35);
-      font-weight: 700;
-    }
-
-    .now-playing {
-      display: grid;
-      gap: 16px;
-      min-height: 100%;
-    }
-
-    .player-shell {
-      padding: 18px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, #fffdf8, #fff6eb);
-      box-shadow: inset 0 0 0 1px rgba(228, 206, 179, 0.48);
-    }
-
-    .player-shell audio {
-      width: 100%;
-      margin-top: 14px;
-    }
-
-    .story-title {
-      margin: 0;
-      font-size: 1.5rem;
-      color: #2b3242;
-    }
-
-    .story-text {
-      margin: 0;
-      color: #4d5567;
-      line-height: 1.95;
-      font-size: 1.02rem;
-      white-space: pre-line;
-    }
-
-    .status {
-      min-height: 24px;
-      margin: 0;
-      color: #4c6172;
-      font-size: 0.95rem;
-    }
-
-    .feature-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .feature-item {
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: #fff8ef;
-      box-shadow: inset 0 0 0 1px rgba(228, 206, 179, 0.42);
-      color: #596376;
-      line-height: 1.65;
-    }
-
-    .collection-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 16px;
-    }
-
-    .collection-card {
-      padding: 18px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, #fffdf9, #fff3e6);
-      box-shadow: inset 0 0 0 1px rgba(228, 193, 145, 0.45);
-      display: grid;
-      gap: 10px;
-    }
-
-    .collection-card h3 {
-      margin: 0;
-    }
-
-    .collection-card p {
-      margin: 0;
-      color: #657083;
-      line-height: 1.7;
-    }
-
-    .footer-note {
-      margin-top: 18px;
-      color: rgba(255, 247, 238, 0.78);
-      text-align: center;
-      font-size: 0.92rem;
-    }
-
-    @media (max-width: 960px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .collection-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .wrap {
-        width: min(100% - 18px, 100%);
-        padding-top: 14px;
-      }
-
-      .hero,
-      .card {
-        padding: 18px;
-        border-radius: 24px;
-      }
-
-      .moon {
-        width: 88px;
-        height: 88px;
-        right: 6vw;
-      }
-
-      .demo-actions {
-        display: grid;
-      }
-
-      .hero-note,
-      .tag {
-        font-size: 0.84rem;
-      }
-    }
-  </style>
+  <title>晚安小工程车 · 本地前端验证页</title>
+  <meta name="description" content="晚安小工程车本地前端验证页，可直接连接本机后端生成故事与音频。">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body class="ambient-medium">
   <div class="sky" aria-hidden="true">
@@ -493,34 +27,36 @@
 
   <main class="wrap">
     <section class="hero">
-      <div class="eyebrow">Xiaoxiao 晚安声音 Demo · 静态预生成音频</div>
-      <h1>晚安小工程车</h1>
+      <div class="eyebrow">晚安小工程车 · 本地前端验证</div>
+      <h1>连接本机后端，直接生成今晚的故事</h1>
       <p class="hero-copy">
-        这是一个更接近产品展示的静态 Demo。今晚不再依赖浏览器即时朗读，主体验改为播放仓库内预生成的
-        <strong>edge-tts · zh-CN-XiaoxiaoNeural</strong> 本地音频，让你更稳定地感受温柔、轻软、适合睡前的晚安声音。
+        这版保留原来的晚安视觉风格，但主流程已经切到本地后端。
+        在左侧填好孩子名字、主题、补充提示和声音后，页面会调用
+        <strong id="heroEndpoint">http://127.0.0.1:3000/api/v1/sessions/create</strong>，
+        然后把返回的故事内容和最新 MP3 直接切到右侧播放器里。
       </p>
       <div class="hero-notes">
-        <span class="hero-note">主体验: 本地 MP3 播放</span>
-        <span class="hero-note">适合 GitHub Pages</span>
-        <span class="hero-note">更适合手机直接点开试听</span>
+        <span class="hero-note">适合本机联调</span>
+        <span class="hero-note">浏览器里直接验证 story + audio</span>
+        <span class="hero-note">默认 voice: zh-CN-XiaoxiaoNeural</span>
       </div>
 
       <div class="ambient-panel">
         <div>
           <strong>夜晚氛围</strong>
           <div class="ambient-options" id="ambientOptions">
-            <button class="ambient-chip" data-ambient="low">安静一点</button>
-            <button class="ambient-chip active" data-ambient="medium">刚刚好</button>
-            <button class="ambient-chip" data-ambient="high">星星多一点</button>
+            <button class="ambient-chip" data-ambient="low" type="button">安静一点</button>
+            <button class="ambient-chip active" data-ambient="medium" type="button">刚刚好</button>
+            <button class="ambient-chip" data-ambient="high" type="button">星星多一点</button>
           </div>
         </div>
         <div>
           <strong>轻柔白噪音提示</strong>
           <div class="noise-options" id="noiseOptions">
-            <button class="ambient-chip active" data-noise="none">关闭</button>
-            <button class="ambient-chip" data-noise="wind">晚风呼呼</button>
-            <button class="ambient-chip" data-noise="rain">小雨沙沙</button>
-            <button class="ambient-chip" data-noise="wheels">远远车轮</button>
+            <button class="ambient-chip active" data-noise="none" type="button">关闭</button>
+            <button class="ambient-chip" data-noise="wind" type="button">晚风呼呼</button>
+            <button class="ambient-chip" data-noise="rain" type="button">小雨沙沙</button>
+            <button class="ambient-chip" data-noise="wheels" type="button">远远车轮</button>
           </div>
         </div>
         <p class="noise-cue" id="noiseCue">现在只有安静的夜晚，月亮在看着小车车睡觉。</p>
@@ -530,290 +66,192 @@
     <section class="layout">
       <div class="stack">
         <section class="card">
-          <h2>今夜试听 / Xiaoxiao 晚安声音</h2>
+          <h2>生成故事</h2>
           <p class="subtle">
-            每一段试听都已经预先生成并放在仓库里。点击卡片里的按钮，就能直接切到对应晚安片段播放，不需要任何后端。
+            填完信息后会直接请求本机后端。成功后，右侧会更新标题、故事正文和最新音频。
           </p>
-          <div class="demo-grid" id="demoGrid"></div>
+
+          <form id="generationForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="childNameInput">宝宝昵称</label>
+                <input id="childNameInput" name="childName" type="text" placeholder="例如：豆豆" required>
+                <p class="help-text">会作为故事里的称呼使用，提交时仍使用后端字段 <code>childName / child_name</code>。</p>
+              </div>
+
+              <div class="field">
+                <label for="themeInput">今晚主题</label>
+                <input id="themeInput" name="theme" type="text" placeholder="例如：晚安小卡车" required>
+                <p class="help-text">建议写成孩子容易理解的短主题，例如“小吊车回家睡觉”。</p>
+              </div>
+
+              <div class="field full">
+                <label for="promptInput">补充要求</label>
+                <textarea id="promptInput" name="prompt" placeholder="例如：要温柔、节奏慢一点，适合 2 岁宝宝，加入月亮和停车小院。"></textarea>
+                <p class="help-text">可以补充年龄、语气、节奏或想出现的画面，留空也可以生成。</p>
+              </div>
+
+              <div class="field full">
+                <label for="voiceInput">配音音色</label>
+                <input id="voiceInput" name="voice" type="text" value="zh-CN-XiaoxiaoNeural" required>
+                <p class="help-text">默认提交给后端的 payload key 仍是 <code>voice</code>，成功后会显示在故事标签里。</p>
+              </div>
+            </div>
+
+            <div class="config-panel">
+              <div class="field">
+                <label for="backendBaseUrlInput">后端服务地址</label>
+                <input id="backendBaseUrlInput" name="backendBaseUrl" type="text" placeholder="http://127.0.0.1:3000" spellcheck="false">
+                <p class="help-text">默认读取 <code>?backendBaseUrl=</code>，否则使用本地保存值，再回退到 <code>http://127.0.0.1:3000</code>。</p>
+              </div>
+              <div class="config-actions">
+                <button class="secondary-btn" id="saveBackendBtn" type="button">保存后端地址</button>
+                <button class="secondary-btn" id="healthCheckBtn" type="button">检查 /health</button>
+                <button class="ghost-btn" id="resetBackendBtn" type="button">恢复默认地址</button>
+              </div>
+              <p class="status inline-status" id="healthStatus">尚未执行健康检查。</p>
+            </div>
+
+            <div class="demo-actions">
+              <button class="primary-btn" id="generateBtn" type="submit">生成故事和音频</button>
+              <button class="secondary-btn" id="cancelGenerateBtn" type="button">取消本次生成</button>
+              <button class="ghost-btn" id="resetFormBtn" type="button">恢复默认示例</button>
+            </div>
+            <p class="help-text inline-help">如果在生成中再次发起请求，前端会先取消上一轮，避免结果交叉覆盖。</p>
+          </form>
         </section>
 
         <section class="card">
-          <h2>这个 Demo 在展示什么</h2>
-          <p class="subtle">主页保留晚安产品感，但主路径聚焦在可直接托管、可稳定复现的 Xiaoxiao 真实音频试听。</p>
-          <div class="feature-list">
-            <div class="feature-item">更像产品 Demo，而不是浏览器原生语音测试页。页面会先推荐一个今晚可直接试听的晚安场景。</div>
-            <div class="feature-item">音频文件全部走本地静态资源路径，部署到 GitHub Pages 后依然可直接播放。</div>
-            <div class="feature-item">如果后续要扩充内容，只需要继续往 `samples/xiaoxiao/` 放入新的 MP3，再更新这页的数据数组即可。</div>
+          <div class="debug-heading">
+            <h2>本地验证状态</h2>
+            <span class="debug-chip" id="verificationSummary">等待首次检查</span>
+          </div>
+          <p class="subtle">下面这组状态会随页面加载、健康检查、生成请求和音频播放器事件动态更新，适合联调时快速确认链路停在哪一步。</p>
+          <div class="verification-list">
+            <div class="verification-item">
+              <div>
+                <strong>页面已加载</strong>
+                <p id="checkPageLoadedDetail">初始化完成后会自动标记。</p>
+              </div>
+              <span class="check-badge pending" id="checkPageLoadedBadge">等待中</span>
+            </div>
+            <div class="verification-item">
+              <div>
+                <strong>后端可访问</strong>
+                <p id="checkBackendReachableDetail">可通过健康检查或成功请求更新。</p>
+              </div>
+              <span class="check-badge pending" id="checkBackendReachableBadge">等待中</span>
+            </div>
+            <div class="verification-item">
+              <div>
+                <strong>生成请求成功</strong>
+                <p id="checkGenerateRequestDetail">发起一次 POST 后更新。</p>
+              </div>
+              <span class="check-badge pending" id="checkGenerateRequestBadge">等待中</span>
+            </div>
+            <div class="verification-item">
+              <div>
+                <strong>故事已返回</strong>
+                <p id="checkStoryReturnedDetail">检测到可展示的标题或正文后更新。</p>
+              </div>
+              <span class="check-badge pending" id="checkStoryReturnedBadge">等待中</span>
+            </div>
+            <div class="verification-item">
+              <div>
+                <strong>音频已返回</strong>
+                <p id="checkAudioReturnedDetail">检测到音频 URL 后更新。</p>
+              </div>
+              <span class="check-badge pending" id="checkAudioReturnedBadge">等待中</span>
+            </div>
+            <div class="verification-item">
+              <div>
+                <strong>音频可播放</strong>
+                <p id="checkAudioPlayableDetail">根据播放器加载与播放事件更新。</p>
+              </div>
+              <span class="check-badge pending" id="checkAudioPlayableBadge">等待中</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>本地验证重点</h2>
+          <div class="panel-grid">
+            <div class="panel-item">页面支持通过 URL 参数或本地保存值切换后端基地址，适合联调不同端口或同机不同服务。</div>
+            <div class="panel-item">提交时会展示加载、错误、成功状态，并区分网络失败、HTTP 失败、解析失败和响应缺字段等情况。</div>
+            <div class="panel-item">播放器会切到后端返回的 <code>latestAudio.url</code>，并自动拼接成当前后端基地址下的完整 MP3 地址。</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="debug-heading">
+            <h2>调试面板</h2>
+            <span class="debug-chip" id="debugTimestamp">尚未请求</span>
+          </div>
+          <p class="subtle">这里会记录最近一次请求和响应，方便本地联调时判断是请求问题、接口问题还是解析问题。</p>
+          <div class="debug-grid">
+            <div class="debug-block">
+              <strong>Request URL</strong>
+              <pre class="debug-output" id="debugRequestUrl">尚未请求</pre>
+            </div>
+            <div class="debug-block">
+              <strong>Response Status</strong>
+              <pre class="debug-output" id="debugResponseStatus">尚未请求</pre>
+            </div>
+            <div class="debug-block">
+              <strong>Request Payload</strong>
+              <pre class="debug-output" id="debugRequestPayload">尚未请求</pre>
+            </div>
+            <div class="debug-block">
+              <strong>Parsed Summary</strong>
+              <pre class="debug-output" id="debugParsedSummary">尚未请求</pre>
+            </div>
+            <div class="debug-block">
+              <strong>Health Check</strong>
+              <pre class="debug-output" id="debugHealthCheck">尚未检查</pre>
+            </div>
+            <div class="debug-block full">
+              <strong>Raw Response</strong>
+              <pre class="debug-output raw-response" id="debugRawResponse">尚未请求</pre>
+            </div>
           </div>
         </section>
       </div>
 
       <section class="card now-playing">
         <div>
-          <h2>今晚正在播放</h2>
-          <div class="meta-row" id="currentTags"></div>
+          <h2>当前故事</h2>
+          <div class="meta-row" id="currentTags">
+            <span class="tag">等待生成</span>
+            <span class="tag">本地联调</span>
+          </div>
         </div>
 
         <div class="player-shell">
-          <p class="story-title" id="currentTitle">月亮小车库</p>
-          <p class="story-text" id="currentDescription">点左侧任意一段 Xiaoxiao 晚安声音，就能在这里开始播放。</p>
+          <p class="story-title" id="currentTitle">还没有生成新的故事</p>
+          <p class="story-text" id="currentDescription">在左侧填写信息后点击“生成故事和音频”，这里会显示后端返回的标题、正文和可播放的最新音频。</p>
+          <p class="audio-status" id="audioStatus">音频状态：等待返回可用音频。</p>
           <audio id="mainPlayer" controls preload="metadata">
-            <source id="mainSource" src="./samples/xiaoxiao/moonlit-garage.mp3" type="audio/mpeg">
+            <source id="mainSource" src="" type="audio/mpeg">
           </audio>
         </div>
 
         <div class="demo-actions">
-          <button class="primary-btn" id="playCurrentBtn">播放这一段</button>
-          <a class="ghost-btn" id="downloadCurrentBtn" href="./samples/xiaoxiao/moonlit-garage.mp3" download>下载当前音频</a>
+          <button class="primary-btn" id="playCurrentBtn" type="button">播放当前音频</button>
+          <button class="secondary-btn" id="copyStoryBtn" type="button">复制故事正文</button>
+          <button class="secondary-btn" id="copyAudioUrlBtn" type="button">复制音频地址</button>
+          <a class="ghost-btn" id="downloadCurrentBtn" href="#" target="_blank" rel="noopener noreferrer">打开音频地址</a>
+          <button class="ghost-btn" id="regenerateBtn" type="button">用相同参数重试</button>
+          <button class="ghost-btn" id="clearCurrentBtn" type="button">清空当前结果</button>
           <a class="secondary-btn" href="./voice-samples.html">查看声音对比页</a>
         </div>
 
-        <p class="status" id="playerStatus">当前默认加载的是 Xiaoxiao 晚安样本。建议直接戴耳机或在手机外放上试听。</p>
+        <p class="status" id="playerStatus">页面已就绪。请确认本机后端已启动，然后在左侧发起一次生成。</p>
       </section>
     </section>
 
-    <section class="card" style="margin-top: 18px;">
-      <h2>晚安故事产品感</h2>
-      <p class="subtle">这里不是原始文件列表，而是一组适合首页展示的晚安内容入口。每个入口都保留了角色、时长、氛围和一句软软的故事说明。</p>
-      <div class="collection-grid">
-        <article class="collection-card">
-          <div class="meta-row">
-            <span class="tag">小挖掘机</span>
-            <span class="tag">约 35 秒</span>
-          </div>
-          <h3>月亮小车库</h3>
-          <p>洗干净的小铲斗慢慢收好，月亮把一小片光轻轻放在车顶上。</p>
-        </article>
-        <article class="collection-card">
-          <div class="meta-row">
-            <span class="tag">小卡车</span>
-            <span class="tag">约 35 秒</span>
-          </div>
-          <h3>风里慢慢回家</h3>
-          <p>软软的晚风陪着小卡车回到停车的小院子，今晚所有轮子都想早点睡。</p>
-        </article>
-        <article class="collection-card">
-          <div class="meta-row">
-            <span class="tag">小车车们</span>
-            <span class="tag">约 35 秒</span>
-          </div>
-          <h3>一起说晚安</h3>
-          <p>一排小工程车静静停好，星星像一盏盏小夜灯，把夜晚照得很安心。</p>
-        </article>
-        <article class="collection-card">
-          <div class="meta-row">
-            <span class="tag">工地小车队</span>
-            <span class="tag">约 1 分 15 秒</span>
-          </div>
-          <h3>晚安，工地上的车</h3>
-          <p>天黑以后，工地上的车车们一个个慢慢停好，月亮、星星和晚风一起陪着它们，轻轻地进入梦里。</p>
-        </article>
-      </div>
-    </section>
-
-    <p class="footer-note">纯静态页面，可直接部署到 GitHub Pages。主体验使用仓库内预生成 Xiaoxiao 音频，无需外部 TTS 服务。</p>
+    <p class="footer-note">这是当前仓库里的本地前端验证页，不会修改原来的静态 demo 仓库。</p>
   </main>
 
-  <script>
-    const demoEntries = [
-      {
-        id: "moonlit-garage",
-        title: "月亮小车库",
-        vehicle: "小挖掘机",
-        duration: "约 35 秒",
-        mood: "轻柔入睡",
-        blurb: "小挖掘机洗好小铲斗，回到暖暖小车库，月亮在门口轻轻等它睡着。",
-        script: "小挖掘机忙完啦。\n小铲斗收好了。\n小车库里有暖暖的小黄灯。\n月亮说，晚安呀，小挖掘机。\n它慢慢停好轮子。\n也慢慢闭上眼睛。\n这一夜，安安静静，甜甜睡。",
-        src: "./samples/xiaoxiao/moonlit-garage.mp3"
-      },
-      {
-        id: "wind-down-yard",
-        title: "风里慢慢回家",
-        vehicle: "小卡车",
-        duration: "约 35 秒",
-        mood: "晚风陪伴",
-        blurb: "小卡车沿着软软的夜路回家，风很轻，灯很暖，整个停车小院都在一起慢慢安静下来。",
-        script: "小卡车回家啦。\n晚风轻轻吹。\n小车灯变得暖暖的。\n路边的小草也快要睡了。\n小卡车慢慢停好。\n把今天的忙碌轻轻放下。\n风很轻，夜很安稳，晚安。",
-        src: "./samples/xiaoxiao/wind-down-yard.mp3"
-      },
-      {
-        id: "sweet-dream-convoy",
-        title: "一起说晚安",
-        vehicle: "小车车们",
-        duration: "约 35 秒",
-        mood: "甜梦收尾",
-        blurb: "小挖掘机、小卡车和朋友们都回来了，一排排安静停好，把今晚的甜梦排成一条柔软的小路。",
-        script: "晚上到了。\n小车车们都回来了。\n小挖掘机停左边。\n小卡车停右边。\n大家都轻轻笑一笑。\n月亮盖上银色的小被子。\n今夜一起甜甜地睡着啦。",
-        src: "./samples/xiaoxiao/sweet-dream-convoy.mp3"
-      },
-      {
-        id: "goodnight-construction-site",
-        title: "晚安，工地上的车",
-        vehicle: "工地小车队",
-        duration: "约 1 分 15 秒",
-        mood: "更轻更慢的催眠晚安",
-        blurb: "天黑以后，工地上的车车们一个个慢慢停好，月亮、星星和晚风一起陪着它们，轻轻地进入梦里。",
-        script: "天慢慢黑了。\n工地也慢慢安静了。\n小挖掘机停好了。\n小翻斗车停好了。\n小推土机也停好了。\n高高的小吊车，慢慢收回长长的手臂。\n水泥搅拌车，也不再转呀转了。\n晚风轻轻吹。\n星星一颗一颗亮起来。\n月亮把软软的银光，轻轻放在每一辆小车上。\n忙了一天的小车车，现在都可以休息了。\n小挖掘机，晚安。\n小翻斗车，晚安。\n小推土机，晚安。\n小吊车，晚安。\n水泥搅拌车，晚安。\n安静的工地，晚安。\n亮晶晶的星星，晚安。\n轻轻的晚风，晚安。\n现在呀，大家都要睡了。\n慢慢睡。\n轻轻睡。\n甜甜地睡。\n等明天太阳出来，再开开心心地出发。\n晚安，小车车。\n晚安，小工地。",
-        src: "./samples/xiaoxiao/goodnight-construction-site.mp3"
-      }
-    ];
-
-    const noiseMap = {
-      none: "现在只有安静的夜晚，月亮在看着小车车睡觉。",
-      wind: "晚风轻轻吹。呼呀，呼呀。像在慢慢拍一拍。",
-      rain: "小雨很轻。沙沙，沙沙。像柔柔的小被子。",
-      wheels: "远远的车轮慢慢过去。咕噜，咕噜。然后又安静了。"
-    };
-
-    const ambientKey = "bedtime-trucks-static-ambient";
-    const noiseKey = "bedtime-trucks-static-noise";
-    const lastTrackKey = "bedtime-trucks-static-track";
-
-    let currentEntry = demoEntries[0];
-
-    const body = document.body;
-    const demoGrid = document.getElementById("demoGrid");
-    const currentTitle = document.getElementById("currentTitle");
-    const currentDescription = document.getElementById("currentDescription");
-    const currentTags = document.getElementById("currentTags");
-    const mainPlayer = document.getElementById("mainPlayer");
-    const mainSource = document.getElementById("mainSource");
-    const downloadCurrentBtn = document.getElementById("downloadCurrentBtn");
-    const playCurrentBtn = document.getElementById("playCurrentBtn");
-    const playerStatus = document.getElementById("playerStatus");
-    const noiseCue = document.getElementById("noiseCue");
-
-    function renderEntries() {
-      demoGrid.innerHTML = demoEntries.map((entry) => `
-        <article class="demo-card ${entry.id === currentEntry.id ? "active" : ""}">
-          <div class="meta-row">
-            <span class="tag">Xiaoxiao</span>
-            <span class="tag">${entry.vehicle}</span>
-            <span class="tag">${entry.duration}</span>
-          </div>
-          <div>
-            <h3>${entry.title}</h3>
-            <p>${entry.blurb}</p>
-          </div>
-          <div class="demo-actions">
-            <button class="primary-btn" data-play-entry="${entry.id}">试听这一段</button>
-            <a class="ghost-btn" href="${entry.src}" download>下载 MP3</a>
-          </div>
-        </article>
-      `).join("");
-    }
-
-    function updateCurrentPanel() {
-      currentTitle.textContent = currentEntry.title;
-      currentDescription.textContent = currentEntry.script;
-      currentTags.innerHTML = `
-        <span class="tag">zh-CN-XiaoxiaoNeural</span>
-        <span class="tag">${currentEntry.vehicle}</span>
-        <span class="tag">${currentEntry.duration}</span>
-        <span class="tag">${currentEntry.mood}</span>
-      `;
-      mainSource.src = currentEntry.src;
-      mainPlayer.load();
-      downloadCurrentBtn.href = currentEntry.src;
-      localStorage.setItem(lastTrackKey, currentEntry.id);
-      playerStatus.textContent = `已切换到《${currentEntry.title}》。这是仓库里的本地 MP3 资源，可直接静态部署。`;
-      renderEntries();
-    }
-
-    function selectEntry(id, autoplay) {
-      const match = demoEntries.find((entry) => entry.id === id);
-      if (!match) {
-        return;
-      }
-      currentEntry = match;
-      updateCurrentPanel();
-      if (autoplay) {
-        const playPromise = mainPlayer.play();
-        if (playPromise && typeof playPromise.catch === "function") {
-          playPromise.catch(() => {
-            playerStatus.textContent = `已切换到《${currentEntry.title}》。如果浏览器拦截了自动播放，点一下播放器上的播放键即可。`;
-          });
-        }
-      }
-    }
-
-    function setAmbient(level) {
-      body.classList.remove("ambient-low", "ambient-medium", "ambient-high");
-      body.classList.add(`ambient-${level}`);
-      localStorage.setItem(ambientKey, level);
-      document.querySelectorAll("[data-ambient]").forEach((button) => {
-        button.classList.toggle("active", button.dataset.ambient === level);
-      });
-    }
-
-    function setNoise(mode) {
-      noiseCue.textContent = noiseMap[mode] || noiseMap.none;
-      localStorage.setItem(noiseKey, mode);
-      document.querySelectorAll("[data-noise]").forEach((button) => {
-        button.classList.toggle("active", button.dataset.noise === mode);
-      });
-    }
-
-    demoGrid.addEventListener("click", (event) => {
-      const trigger = event.target.closest("[data-play-entry]");
-      if (!trigger) {
-        return;
-      }
-      selectEntry(trigger.dataset.playEntry, true);
-    });
-
-    playCurrentBtn.addEventListener("click", () => {
-      const playPromise = mainPlayer.play();
-      if (playPromise && typeof playPromise.catch === "function") {
-        playPromise.catch(() => {
-          playerStatus.textContent = "浏览器拦截了自动播放。请直接点一下原生音频播放器中的播放键。";
-        });
-      }
-    });
-
-    document.getElementById("ambientOptions").addEventListener("click", (event) => {
-      const trigger = event.target.closest("[data-ambient]");
-      if (trigger) {
-        setAmbient(trigger.dataset.ambient);
-      }
-    });
-
-    document.getElementById("noiseOptions").addEventListener("click", (event) => {
-      const trigger = event.target.closest("[data-noise]");
-      if (trigger) {
-        setNoise(trigger.dataset.noise);
-      }
-    });
-
-    mainPlayer.addEventListener("play", () => {
-      playerStatus.textContent = `正在播放《${currentEntry.title}》, 声音来自预生成的 Xiaoxiao 本地样本。`;
-    });
-
-    mainPlayer.addEventListener("pause", () => {
-      if (!mainPlayer.ended) {
-        playerStatus.textContent = `《${currentEntry.title}》已暂停，可以稍后继续。`;
-      }
-    });
-
-    mainPlayer.addEventListener("ended", () => {
-      playerStatus.textContent = `《${currentEntry.title}》播放完成。今晚可以再点另一段继续听。`;
-    });
-
-    function init() {
-      const savedAmbient = localStorage.getItem(ambientKey) || "medium";
-      const savedNoise = localStorage.getItem(noiseKey) || "none";
-      const savedTrack = localStorage.getItem(lastTrackKey);
-      const savedEntry = demoEntries.find((entry) => entry.id === savedTrack);
-      if (savedEntry) {
-        currentEntry = savedEntry;
-      }
-      renderEntries();
-      setAmbient(savedAmbient);
-      setNoise(savedNoise);
-      updateCurrentPanel();
-    }
-
-    init();
-  </script>
+  <script src="./app.js"></script>
 </body>
 </html>
