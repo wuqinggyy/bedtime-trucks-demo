@@ -31,7 +31,7 @@
       <h1>连接本机后端，直接生成今晚的故事</h1>
       <p class="hero-copy">
         这版保留原来的晚安视觉风格，但主流程已经切到本地后端。
-        在左侧填好孩子名字、主题、补充提示和声音后，页面会调用
+        在左侧填好孩子名字、主题、补充提示、声音和故事生成配置后，页面会调用
         <strong id="heroEndpoint">http://127.0.0.1:3000/api/v1/sessions/create</strong>，
         然后把返回的故事内容和最新 MP3 直接切到右侧播放器里。
       </p>
@@ -39,6 +39,7 @@
         <span class="hero-note">适合本机联调</span>
         <span class="hero-note">浏览器里直接验证 story + audio</span>
         <span class="hero-note">默认 voice: zh-CN-XiaoxiaoNeural</span>
+        <span class="hero-note">API key 仅在后端环境变量里读取</span>
       </div>
 
       <div class="ambient-panel">
@@ -95,6 +96,68 @@
                 <label for="voiceInput">配音音色</label>
                 <input id="voiceInput" name="voice" type="text" value="zh-CN-XiaoxiaoNeural" required>
                 <p class="help-text">默认提交给后端的 payload key 仍是 <code>voice</code>，成功后会显示在故事标签里。</p>
+              </div>
+            </div>
+
+            <div class="config-panel">
+              <div class="debug-heading">
+                <div>
+                  <strong>故事生成配置</strong>
+                  <p class="help-text">默认走本地模板模式；切到 model 时，只填写后端要读取的环境变量名，不在前端输入真实密钥。</p>
+                </div>
+                <span class="debug-chip" id="providerModeSummary">template-local</span>
+              </div>
+
+              <div class="form-grid compact-grid">
+                <div class="field">
+                  <label for="providerModeInput">生成模式</label>
+                  <select id="providerModeInput" name="providerMode">
+                    <option value="template-local">template-local</option>
+                    <option value="model">model</option>
+                  </select>
+                  <p class="help-text">`template-local` 保持当前稳定联调路径；只有在你确认后端环境变量已配置时再切 `model`。</p>
+                </div>
+
+                <div class="field">
+                  <label for="modelInput">模型 ID</label>
+                  <input id="modelInput" name="model" type="text" placeholder="例如：gpt-4o-mini" spellcheck="false">
+                  <p class="help-text">仅在 `model` 模式下发送；留空则由后端使用默认模型配置。</p>
+                </div>
+
+                <div class="field">
+                  <label for="baseUrlInput">模型 Base URL</label>
+                  <input id="baseUrlInput" name="baseUrl" type="text" placeholder="例如：https://api.openai.com/v1" spellcheck="false">
+                  <p class="help-text">可选，传给后端的 OpenAI-compatible base URL；留空则使用后端默认值。</p>
+                </div>
+
+                <div class="field">
+                  <label for="apiKeyEnvVarInput">后端 API Key 环境变量名</label>
+                  <input id="apiKeyEnvVarInput" name="apiKeyEnvVar" type="text" placeholder="例如：OPENAI_API_KEY" spellcheck="false" autocomplete="off">
+                  <p class="help-text">这里只提交环境变量名，例如 <code>OPENAI_API_KEY</code>，不提交 secret 本身。</p>
+                </div>
+
+                <div class="field">
+                  <label for="temperatureInput">Temperature</label>
+                  <input id="temperatureInput" name="temperature" type="number" min="0" max="2" step="0.1" placeholder="例如：0.7">
+                  <p class="help-text">可选，范围 `0` 到 `2`；留空则让后端使用默认值。</p>
+                </div>
+
+                <div class="field">
+                  <label for="maxTokensInput">Max Tokens</label>
+                  <input id="maxTokensInput" name="maxTokens" type="number" min="1" step="1" placeholder="例如：900">
+                  <p class="help-text">可选，正整数；留空则让后端使用默认值。</p>
+                </div>
+
+                <div class="field full">
+                  <details class="advanced-panel" id="advancedStoryConfig">
+                    <summary>高级配置：System Prompt</summary>
+                    <div class="advanced-panel-body">
+                      <label for="systemPromptInput">System Prompt</label>
+                      <textarea id="systemPromptInput" name="systemPrompt" placeholder="例如：请生成适合 2 岁宝宝、节奏慢、句子短、温柔收束的中文睡前故事。"></textarea>
+                      <p class="help-text">可选。只在 `model` 模式下发送，适合本地验证模型提示词效果。</p>
+                    </div>
+                  </details>
+                </div>
               </div>
             </div>
 

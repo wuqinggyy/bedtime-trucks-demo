@@ -277,7 +277,8 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   border: 1px solid rgba(216, 180, 136, 0.5);
   border-radius: 16px;
@@ -290,7 +291,8 @@ textarea {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: none;
   border-color: var(--accent-deep);
   box-shadow: 0 0 0 3px rgba(247, 201, 138, 0.22);
@@ -320,6 +322,60 @@ textarea {
   border-radius: 20px;
   background: linear-gradient(180deg, #fffdf8, #fff4e8);
   box-shadow: inset 0 0 0 1px rgba(225, 194, 149, 0.38);
+}
+
+.compact-grid {
+  margin-top: 0;
+}
+
+.advanced-panel {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.56);
+  box-shadow: inset 0 0 0 1px rgba(225, 194, 149, 0.3);
+}
+
+.advanced-panel summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 14px 16px;
+  font-weight: 700;
+  color: #314055;
+}
+
+.advanced-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.advanced-panel summary::after {
+  content: "展开";
+  float: right;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.advanced-panel[open] summary::after {
+  content: "收起";
+}
+
+.advanced-panel-body {
+  display: grid;
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+
+.model-mode-active .config-panel .advanced-panel,
+.model-mode-active .config-panel select,
+.model-mode-active .config-panel input,
+.model-mode-active .config-panel textarea {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: not-allowed;
+  color: #8a94a6;
+  background: rgba(239, 239, 239, 0.78);
 }
 
 .config-actions,

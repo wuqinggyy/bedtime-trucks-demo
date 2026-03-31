@@ -97,6 +97,13 @@ http://127.0.0.1:8000
    - `theme`
    - `prompt`
    - `voice`
+   - `providerMode`
+   - `model`（仅 `model` 模式）
+   - `baseUrl`（仅 `model` 模式）
+   - `apiKeyEnvVar`（仅 `model` 模式，填写环境变量名，不填 secret）
+   - `temperature`（仅 `model` 模式）
+   - `maxTokens`（仅 `model` 模式）
+   - `systemPrompt`（仅 `model` 模式，高级字段）
    - `backend base URL`（可选，默认 `http://127.0.0.1:3000`）
 3. 点击：
 
@@ -106,6 +113,8 @@ http://127.0.0.1:8000
 
 4. 验证以下结果：
    - 页面状态变更为生成中 / 成功 / 失败
+   - 默认 `template-local` 模式下，请求 payload 不需要携带模型字段，旧链路仍可直接工作
+   - 切到 `model` 模式后，请求 payload 会按需包含 `providerMode / model / baseUrl / apiKeyEnvVar / temperature / maxTokens / systemPrompt`
    - 生成过程中可点击“取消本次生成”；若连续再次触发生成，旧请求会先被取消，避免结果交叉覆盖
    - “本地验证状态”面板会动态更新 6 个检查项
    - 右侧故事标题更新
@@ -223,15 +232,14 @@ http://127.0.0.1:8000
 
 ## 当前验证结果
 
-当前链路已经跑通，验证结论如下：
+当前验证应至少覆盖以下两种场景：
 
 - [x] 前端页面可启动
 - [x] 浏览器可正常访问页面
-- [x] 前端可成功请求后端接口
-- [x] CORS 预检已通过
-- [x] 后端可成功生成 session / story / audio
-- [x] 前端可正确展示故事正文
-- [x] 前端可加载并播放返回音频
+- [ ] `template-local` 模式请求 shape 正确，且后端可回退到本地模板生成
+- [ ] 如本机存在对应 API key 环境变量，则 `model` 模式可至少成功验证一次
+- [ ] 前端可正确展示故事正文
+- [ ] 前端可加载并播放返回音频
 
 ---
 
@@ -263,11 +271,7 @@ http://127.0.0.1:8000
 
 ## 一句话总结
 
-`bedtime-trucks-app` 已完成本地前后端联调闭环：
+当前本地验证页除了原有 story/audio 联调，还支持安全地验证后端模型参数透传：
 
-**页面可启动、接口可调用、故事可显示、音频可播放。**
-
-本轮主要修复了两个关键问题：
-
-1. 后端 CORS / OPTIONS 预检失败
-2. 前端对后端响应结构解析不完整
+1. 默认走 `template-local`，保证旧链路继续可用
+2. 需要模型时，只把环境变量名发给后端，不把 API key 暴露到前端

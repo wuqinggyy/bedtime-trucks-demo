@@ -7,7 +7,14 @@
     childName: "豆豆",
     theme: "晚安小卡车",
     prompt: "要温柔、节奏慢一点，适合 2 岁宝宝，加入月亮和停车小院。",
-    voice: "zh-CN-XiaoxiaoNeural"
+    voice: "zh-CN-XiaoxiaoNeural",
+    providerMode: "template-local",
+    model: "",
+    baseUrl: "",
+    apiKeyEnvVar: "",
+    temperature: "",
+    maxTokens: "",
+    systemPrompt: ""
   };
 
   const noiseMap = {
@@ -45,6 +52,14 @@
   const themeInput = document.getElementById("themeInput");
   const promptInput = document.getElementById("promptInput");
   const voiceInput = document.getElementById("voiceInput");
+  const providerModeInput = document.getElementById("providerModeInput");
+  const modelInput = document.getElementById("modelInput");
+  const baseUrlInput = document.getElementById("baseUrlInput");
+  const apiKeyEnvVarInput = document.getElementById("apiKeyEnvVarInput");
+  const temperatureInput = document.getElementById("temperatureInput");
+  const maxTokensInput = document.getElementById("maxTokensInput");
+  const systemPromptInput = document.getElementById("systemPromptInput");
+  const providerModeSummary = document.getElementById("providerModeSummary");
   const backendBaseUrlInput = document.getElementById("backendBaseUrlInput");
   const saveBackendBtn = document.getElementById("saveBackendBtn");
   const resetBackendBtn = document.getElementById("resetBackendBtn");
@@ -211,6 +226,55 @@
     }
 
     return parts.join("\n");
+  }
+
+  function trimToEmpty(value) {
+    return typeof value === "string" ? value.trim() : "";
+  }
+
+  function readOptionalNumber(value, options) {
+    const trimmed = trimToEmpty(value);
+    if (!trimmed) {
+      return {
+        ok: true,
+        hasValue: false
+      };
+    }
+
+    const parsed = options && options.integerOnly ? Number.parseInt(trimmed, 10) : Number(trimmed);
+    if (!Number.isFinite(parsed)) {
+      return {
+        ok: false,
+        message: options && options.label ? `${options.label} 必须是数字。` : "数值格式无效。"
+      };
+    }
+
+    if (options && options.integerOnly && !Number.isInteger(parsed)) {
+      return {
+        ok: false,
+        message: `${options.label} 必须是整数。`
+      };
+    }
+
+    if (options && typeof options.min === "number" && parsed < options.min) {
+      return {
+        ok: false,
+        message: `${options.label} 不能小于 ${options.min}。`
+      };
+    }
+
+    if (options && typeof options.max === "number" && parsed > options.max) {
+      return {
+        ok: false,
+        message: `${options.label} 不能大于 ${options.max}。`
+      };
+    }
+
+    return {
+      ok: true,
+      hasValue: true,
+      value: parsed
+    };
   }
 
   function updateDebugPanel(details) {
@@ -430,6 +494,7 @@
       <span class="tag">${parsed.audio.voice}</span>
       <span class="tag">${formValues.childName || "未填写名字"}</span>
       <span class="tag">${formValues.theme || "未填写主题"}</span>
+      <span class="tag">${formValues.providerMode === "model" ? "model" : "template-local"}</span>
       <span class="tag">已连接本机后端</span>
     `;
 
@@ -518,7 +583,14 @@
       childName: childNameInput.value.trim(),
       theme: themeInput.value.trim(),
       prompt: promptInput.value.trim(),
-      voice: voiceInput.value.trim()
+      voice: voiceInput.value.trim(),
+      providerMode: providerModeInput.value === "model" ? "model" : "template-local",
+      model: trimToEmpty(modelInput.value),
+      baseUrl: trimToEmpty(baseUrlInput.value),
+      apiKeyEnvVar: trimToEmpty(apiKeyEnvVarInput.value),
+      temperature: trimToEmpty(temperatureInput.value),
+      maxTokens: trimToEmpty(maxTokensInput.value),
+      systemPrompt: trimToEmpty(systemPromptInput.value)
     };
   }
 
@@ -527,6 +599,14 @@
     themeInput.value = values.theme || "";
     promptInput.value = values.prompt || "";
     voiceInput.value = values.voice || defaultFormValues.voice;
+    providerModeInput.value = values.providerMode === "model" ? "model" : "template-local";
+    modelInput.value = values.model || "";
+    baseUrlInput.value = values.baseUrl || "";
+    apiKeyEnvVarInput.value = values.apiKeyEnvVar || "";
+    temperatureInput.value = values.temperature != null ? String(values.temperature) : "";
+    maxTokensInput.value = values.maxTokens != null ? String(values.maxTokens) : "";
+    systemPromptInput.value = values.systemPrompt || "";
+    syncProviderModeUi();
   }
 
   function persistFormValues() {
@@ -536,6 +616,25 @@
   function syncBackendBaseUrlUi() {
     backendBaseUrlInput.value = getBackendBaseUrl();
     heroEndpoint.textContent = getCreateSessionUrl();
+  }
+
+  function syncProviderModeUi() {
+    const mode = providerModeInput.value === "model" ? "model" : "template-local";
+    const isModelMode = mode === "model";
+
+    providerModeSummary.textContent = mode;
+    document.body.classList.toggle("model-mode-active", isModelMode);
+
+    [
+      modelInput,
+      baseUrlInput,
+      apiKeyEnvVarInput,
+      temperatureInput,
+      maxTokensInput,
+      systemPromptInput
+    ].forEach((input) => {
+      input.disabled = !isModelMode;
+    });
   }
 
   function setBackendBaseUrl(nextBaseUrl, sourceLabel) {
@@ -578,13 +677,55 @@
   }
 
   function buildRequestPayload(formValues) {
-    return {
+    const payload = {
       childName: formValues.childName,
       child_name: formValues.childName,
       theme: formValues.theme,
       prompt: formValues.prompt,
-      voice: formValues.voice
+      voice: formValues.voice,
+      providerMode: formValues.providerMode === "model" ? "model" : "template-local"
     };
+
+    if (formValues.providerMode === "model") {
+      if (formValues.model) {
+        payload.model = formValues.model;
+      }
+      if (formValues.baseUrl) {
+        payload.baseUrl = formValues.baseUrl;
+      }
+      if (formValues.apiKeyEnvVar) {
+        payload.apiKeyEnvVar = formValues.apiKeyEnvVar;
+      }
+      if (formValues.systemPrompt) {
+        payload.systemPrompt = formValues.systemPrompt;
+      }
+
+      const temperature = readOptionalNumber(formValues.temperature, {
+        label: "Temperature",
+        min: 0,
+        max: 2
+      });
+      if (!temperature.ok) {
+        throw new Error(temperature.message);
+      }
+      if (temperature.hasValue) {
+        payload.temperature = temperature.value;
+      }
+
+      const maxTokens = readOptionalNumber(formValues.maxTokens, {
+        label: "Max Tokens",
+        min: 1,
+        integerOnly: true
+      });
+      if (!maxTokens.ok) {
+        throw new Error(maxTokens.message);
+      }
+      if (maxTokens.hasValue) {
+        payload.maxTokens = maxTokens.value;
+      }
+    }
+
+    return payload;
   }
 
   async function parseResponseBody(response) {
@@ -738,6 +879,15 @@
       return;
     }
 
+    if (formValues.providerMode === "model" && formValues.baseUrl) {
+      const modelBaseUrlValidation = validateBackendBaseUrl(formValues.baseUrl);
+      if (!modelBaseUrlValidation.ok) {
+        updateStatus(`模型 Base URL 无效：${modelBaseUrlValidation.message}`, "error");
+        return;
+      }
+      formValues.baseUrl = modelBaseUrlValidation.value;
+    }
+
     const backendValidation = validateBackendBaseUrl(backendBaseUrlInput.value);
     if (!backendValidation.ok) {
       updateStatus(backendValidation.message, "error");
@@ -746,7 +896,13 @@
 
     setBackendBaseUrl(backendValidation.value);
 
-    const requestPayload = buildRequestPayload(formValues);
+    let requestPayload;
+    try {
+      requestPayload = buildRequestPayload(formValues);
+    } catch (error) {
+      updateStatus(error.message || "生成参数无效，请检查模型配置。", "error");
+      return;
+    }
     const requestUrl = getCreateSessionUrl();
     const request = beginGenerationRequest("form-submit");
 
@@ -951,6 +1107,7 @@
     initBackendBaseUrl();
     setAmbient(savedAmbient);
     setNoise(savedNoise);
+    syncProviderModeUi();
     resetCurrentPanel({
       keepStatus: true,
       clearStored: false
@@ -974,6 +1131,20 @@
   }
 
   generationForm.addEventListener("submit", handleGenerate);
+  providerModeInput.addEventListener("change", () => {
+    syncProviderModeUi();
+    persistFormValues();
+  });
+  [
+    modelInput,
+    baseUrlInput,
+    apiKeyEnvVarInput,
+    temperatureInput,
+    maxTokensInput,
+    systemPromptInput
+  ].forEach((input) => {
+    input.addEventListener("input", persistFormValues);
+  });
 
   resetFormBtn.addEventListener("click", () => {
     applyFormValues(defaultFormValues);

@@ -30,6 +30,9 @@ GET /health
 
 - 生成面板对中文用户展示为“宝宝昵称 / 今晚主题 / 补充要求 / 配音音色”，内部仍保持原有 payload keys
 - `voice` 默认值是 `zh-CN-XiaoxiaoNeural`
+- 默认故事生成模式是 `template-local`，本地验证不需要模型密钥
+- 页面支持配置 `providerMode`、`model`、`baseUrl`、`apiKeyEnvVar`、`temperature`、`maxTokens` 和高级 `systemPrompt`
+- 前端只会提交 `apiKeyEnvVar` 这样的后端环境变量名，不会暴露真实 API key
 - 提交后显示加载、错误、成功状态
 - 生成中的请求支持显式取消；如果再次触发生成，前端会先中止上一轮请求，避免晚到响应覆盖新结果
 - 支持一键检查 `GET /health`，并把结果显示到页面和调试面板
@@ -69,6 +72,17 @@ http://127.0.0.1:8000
 - 可通过 `?backendBaseUrl=` URL 参数覆盖
 - 也可在页面中填写 `backend base URL` 后点击“保存后端地址”
 - 页面会优先读取 URL 参数，其次读取 localStorage 中保存值
+- 页面默认 `providerMode=template-local`
+- 只有当你切到 `model` 模式时，才会把以下字段带进请求 payload：
+  - `providerMode`
+  - `model`
+  - `baseUrl`
+  - `apiKeyEnvVar`
+  - `temperature`
+  - `maxTokens`
+  - `systemPrompt`
+- `temperature` 会按 `0` 到 `2` 的数值发送，`maxTokens` 会按正整数发送；留空则交给后端默认配置
+- 如果你要验证 model 模式，请先在后端环境中设置真实密钥，例如 `OPENAI_API_KEY=...`，前端里只填写变量名 `OPENAI_API_KEY`
 
 ## 主要文件
 
